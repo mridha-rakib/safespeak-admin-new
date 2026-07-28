@@ -1,0 +1,61 @@
+{
+  "name": "safespeak-admin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Standalone local-first admin dashboard for managing SafeSpeak content, taxonomy, and publishing.",
+  "scripts": {
+    "dev": "next dev --port 3100",
+    "build": "next build",
+    "start": "next start --port 3100",
+    "start:e2e": "next start --port 3199",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/unit/**/*.test.ts",
+    "pretest:e2e": "next build",
+    "test:e2e": "playwright test",
+    "format": "prettier src/ tests/ --write"
+  },
+  "dependencies": {
+    "@radix-ui/react-avatar": "^1.1.11",
+    "@radix-ui/react-dialog": "^1.1.16",
+    "@radix-ui/react-dropdown-menu": "^2.1.17",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "@tabler/icons-react": "^3.35.0",
+    "@tanstack/react-table": "^8.21.3",
+    "clsx": "^2.1.1",
+    "dexie": "^4.4.4",
+    "dexie-react-hooks": "^1.1.7",
+    "jszip": "^3.10.1",
+    "next": "^15.5.19",
+    "pdfjs-dist": "^6.1.200",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "react-hook-form": "^7.65.0",
+    "@hookform/resolvers": "^5.5.7",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "15.5.7",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-check-file": "^3.3.1",
+    "eslint-plugin-n": "^17.23.1",
+    "postcss": "^8.5.6",
+    "prettier": "3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "license": "MIT",
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "sharp", "unrs-resolver"]
+  }
+}
