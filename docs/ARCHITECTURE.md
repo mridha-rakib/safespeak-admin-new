@@ -293,3 +293,35 @@ Two symptoms were reported against `/content/knowledge-legislation`: Chrome's "P
 **Tests added:**
 - `tests/unit/knowledge-legislation-tab-regression.test.ts` — pins the "one shared `documents` read, not one per tab" fix, confirms `TabsContent`'s unmount-when-inactive behaviour, confirms `TabsList`'s overflow fix, and covers `summarizeReadiness`/`searchLocalChunks` bounded/deterministic behaviour on missing/empty data.
 - `tests/e2e/knowledge-legislation-tabs-smoke.spec.ts` (`pnpm test:e2e:knowledge-legislation-tabs`) — 5 rounds × 4 tabs (20 transitions) against a real production build, asserting: styled shell (real computed background colour, not raw HTML), each panel's expected content becomes visible, no uncaught page error, no extra navigation, no page-level horizontal overflow at desktop or 390px mobile.
+
+## Phase 6.1 — five-topic matching-rule coverage, matching-rule/context parity, build isolation
+
+Phase 6.1 closes three remaining Phase 6 gaps: complete Published+Enabled matching-rule coverage for all five Assistant topics, matching-rule/context parity (conditions that are actually reachable by the deterministic scenarios that evaluate them), and a permanent structural fix for the dev/build `.next` collision documented above under "Knowledge & Legislation tab regression." All work stayed mock-only — no real AI, no real backend, no live Admin→Frontend sync.
+
+### Five-topic coverage
+
+Before this phase, `general_assistant` and `migrant_challenges` had no Published+Enabled matching rule at all, and the one `cyber_scam` rule was Published but **Disabled**. Verified against the real deterministic engine + real generated bundle with a bare-topic `MockIncidentContext` (no jurisdiction/urgency/triage-label refinement), `domestic_violence` and `racial_abuse` also produced zero recommendations — their existing rules' `jurisdictions`/`urgencyLevels`/`triageLabelIds` conditions were never reliably satisfiable by the context the Assistant topics actually produce by default.
+
+Fix: one new Published+Enabled, **topic-only-conditioned** baseline rule per topic (`demo-rule-general-assistant-support-navigation`, `demo-rule-domestic-violence-baseline-support`, `demo-rule-racial-abuse-baseline-support`, `demo-rule-cyber-scam-evidence-and-support`, `demo-rule-migrant-challenges-community-support`) — every other condition dimension left empty (wildcard), so each reliably triggers regardless of what a given conversation has captured. The pre-existing richer, jurisdiction/urgency/triage-label-specific rules (`demo-rule-domestic-violence-safety-support`, `demo-rule-racial-abuse-know-your-rights`) are unchanged and remain as the "fires when richer context is available" examples; `demo-rule-cyber-scam-report-and-protect` remains Published-but-Disabled on purpose (the fixture demonstrating "a disabled published rule does not execute"). Two new published content records were added since none of the existing published Microcards/Rights Content fit a genuinely topic-neutral General Assistant card or migrant-specific community/language-access information: `demo-microcard-general-next-steps-guide`, `demo-rights-community-and-language-support`. Verified (`tests/unit/matching-rule-context-parity.test.ts`) all five topics now produce a non-empty, mutually-distinct recommendation set from the bare topic alone.
+
+### Matching-rule/context parity
+
+`Support Organisations`/`Microcards`/etc. condition on Triage Label and Incident Type **ids**, which the deterministic engine can only satisfy if the frontend's topic registry resolves the right **machine keys** into those ids. Audited against the real seeded taxonomy (`online_harassment`, `workplace_discrimination`, `hate_speech` incident types; `immediate_danger`, `escalate_to_authority`, `needs_follow_up`, `religious_bias_indicator` triage labels) and corrected `safespeak-frontend/src/lib/mock/topic-registry.ts`'s candidate machine keys, which had drifted from invented values (`"safety_concern"`, `"escalate_authority"`, `"bias_indicator"`, `"racial_harassment"`, …) that never matched anything actually seeded. Where no seeded Incident Type genuinely represents a topic (domestic violence, cyber scam, migrant challenges — all three currently only have unrelated incident types seeded), the candidate list was left empty rather than forcing a false association — documented inline, not silently guessed.
+
+### Build output isolation
+
+**Confirmed root cause** (same one already diagnosed under "Knowledge & Legislation tab regression" above, now permanently fixed rather than only manually recovered): `next dev`, a plain `next build`/`next start`, and the E2E runner's own `next build`/`next start` all defaulted to the single `.next` directory. Running any build while a dev server was live overwrote the dev server's in-flight dev-mode manifest with production-hashed asset filenames the dev server was never going to request — every CSS/JS chunk request then 404'd, which is what produced both the raw-unstyled-HTML and the Chrome "Page Unresponsive" symptoms.
+
+**Fix — Option A from the task brief (separate `distDir` per purpose), not process detection**: `next.config.mjs` now reads `distDir: process.env.NEXT_DIST_DIR || ".next"`. `scripts/run-next.mjs` (new, no new dependency — a direct `child_process.spawn`, never through a shell, matching the same reasoning already established in `scripts/e2e-runner.mjs`) sets `NEXT_DIST_DIR` before invoking the real `next` CLI:
+
+| Purpose | Directory | package.json script |
+|---|---|---|
+| `next dev` | `.next-dev` | `pnpm dev` |
+| production `next build`/`next start` | `.next-build` | `pnpm build` / `pnpm start` |
+| E2E `next build`/`next start` | `.next-e2e` | `pnpm start:e2e`; `scripts/e2e-runner.mjs` sets the same env var directly on its own two spawn calls |
+
+Ports are unchanged (dev 3100, E2E 3199). **Live-verified**, not just structurally asserted: started `pnpm dev`, confirmed `.next-dev/` created and the dev server serving correctly; ran `pnpm build` while it was still live — `.next-build/` was created, `.next-dev/` was untouched, and the live dev server (including a full Knowledge & Legislation 20-round/80-click tab stress test) remained fully responsive throughout; then ran `node scripts/e2e-runner.mjs tests/e2e/knowledge-legislation-tabs-smoke.spec.ts` (its own full build+start+test+teardown cycle) while the dev server was *still* live — `.next-e2e/` was created, both E2E tests passed, the E2E server was torn down cleanly afterward, and the dev server was unaffected throughout. `tests/unit/build-output-isolation.test.ts` pins the configuration (distinct directory names, no shell spawn, both `e2e-runner.mjs` spawn calls using the isolated env, `.gitignore` coverage) as a fast CI-safe regression guard for what those manual runs proved.
+
+### Deferred
+
+Real AI, real incident extraction, real backend, live Admin→Frontend sync, production database, RAG/embeddings/vector search, external verification, live booking/availability, multiple admin roles, full historical E2E stabilisation.

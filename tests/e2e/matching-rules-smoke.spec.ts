@@ -21,7 +21,14 @@ test.beforeEach(async ({ page }) => {
 test("seeded matching rules load into the management table", async ({ page }) => {
   const table = page.getByRole("table", { name: "Matching Rules" });
   await expect(table).toBeVisible();
+
+  // Phase 6.1 added 5 more Published Enabled baseline rules (14 seeded rules
+  // total now, default page size 10) — search first so this assertion isn't
+  // sensitive to which page a given row happens to land on.
+  await page.getByPlaceholder("Search matching rules...").fill("Domestic violence");
   await expect(table.getByText("Domestic violence → safety planning & support (demo)")).toBeVisible();
+
+  await page.getByPlaceholder("Search matching rules...").fill("Racial abuse");
   await expect(table.getByText("Racial abuse → know your rights & report (demo)")).toBeVisible();
 });
 
@@ -127,8 +134,17 @@ test("Test Matching returns recommendations for a context matching the rule's ow
   await page.getByRole("button", { name: "Run test match" }).click();
 
   await expect(page.getByText("Triggered rules")).toBeVisible();
-  await expect(page.getByText("This rule")).toBeVisible();
-  await expect(page.getByText("Quick safety planning tip")).toBeVisible();
+  // Exact match: Phase 6.1 added demo-rule-domestic-violence-baseline-support,
+  // a topic-only rule that also triggers for this same context and
+  // contributes its own "This rule has no jurisdiction condition, so it
+  // applies Australia-wide" reason text — a loose substring match on "This
+  // rule" is ambiguous against that text, so the badge itself needs `exact`.
+  await expect(page.getByText("This rule", { exact: true })).toBeVisible();
+  // `.first()`: with demo-rule-domestic-violence-baseline-support (Phase 6.1)
+  // also triggering for this context and recommending the same microcard,
+  // its name now legitimately appears twice (a summary line and the list
+  // item) — either occurrence proves the recommendation resolved.
+  await expect(page.getByText("Quick safety planning tip").first()).toBeVisible();
 });
 
 test("running Test Matching records an audit activity entry", async ({ page }) => {
@@ -150,10 +166,11 @@ test("an eligible draft matching rule can be permanently deleted", async ({ page
 test("a recommendation that is no longer published blocks Ready for review on an existing rule (needs_update demo rule)", async ({
   page,
 }) => {
-  // demo-rule-housing-support-referral recommends an organisation/destination
-  // that are no longer published — the eligibility check re-validates every
-  // existing recommendation on every check (no "already selected" leniency).
+  // demo-rule-housing-support-referral recommends an organisation AND a
+  // destination that are no longer published — two separate blocker list
+  // items both contain this substring, so a loose text match is ambiguous;
+  // `.first()` is enough to confirm at least one is shown.
   await page.goto("/taxonomy/matching-rules/demo-rule-housing-support-referral/edit");
-  await expect(page.getByText(/are not published and cannot be used in a live matching rule/i)).toBeVisible();
+  await expect(page.getByText(/are not published and cannot be used in a live matching rule/i).first()).toBeVisible();
   await expect(page.getByRole("button", { name: "Mark ready for review" })).toBeDisabled();
 });
