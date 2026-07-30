@@ -1,14 +1,19 @@
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import { expect, test } from "@playwright/test";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// Playwright compiles spec files to CommonJS, where __dirname is already a
+// native global — no import.meta/fileURLToPath ESM shim needed (and using
+// one here breaks loading under a CJS runtime).
 const SAMPLE_PDF = path.join(__dirname, "fixtures", "sample.pdf");
 
+/**
+ * Covers the Phase 1 local-PDF-preview proof, relocated to the Phase 2
+ * create-document wizard (Step 1) — the old tab-based "Upload document"
+ * panel was superseded by /content/knowledge-legislation/new.
+ */
 test.beforeEach(async ({ page }) => {
-  await page.goto("/content/knowledge-legislation");
-  await page.getByRole("tab", { name: "Upload document" }).click();
+  await page.goto("/content/knowledge-legislation/new");
 });
 
 test("states this is a local preview, not production RAG indexing", async ({ page }) => {
@@ -32,20 +37,4 @@ test("a valid PDF is accepted, extracted locally, and produces a chunk preview",
 
   await expect(page.getByText(/local preview ready/i)).toBeVisible({ timeout: 20_000 });
   await expect(page.getByText(/not indexed in a production rag system/i)).toBeVisible();
-
-  await page.getByRole("tab", { name: "Documents", exact: true }).click();
-  await expect(page.getByText("sample")).toBeVisible();
-  await expect(page.getByText("Ready for AI processing")).toBeVisible();
-});
-
-test("processing issues tab lists documents that failed local extraction", async ({ page }) => {
-  await page.getByRole("tab", { name: "Processing issues" }).click();
-  await expect(page.getByText(/community reporting guidelines/i)).toBeVisible();
-  await expect(page.getByText(/password-protected or corrupted/i)).toBeVisible();
-});
-
-test("test retrieval tab is explicitly marked not implemented", async ({ page }) => {
-  await page.getByRole("tab", { name: "Test retrieval" }).click();
-  await expect(page.getByText(/not implemented in this phase/i)).toBeVisible();
-  await expect(page.getByPlaceholder(/test retrieval will be available/i)).toBeDisabled();
 });

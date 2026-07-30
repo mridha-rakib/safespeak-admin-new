@@ -18,6 +18,16 @@ function NavItem({ item, active, onNavigate }: { item: NavLinkItem; active: bool
       href={item.href as Route}
       onClick={onNavigate}
       aria-current={active ? "page" : undefined}
+      // Next.js prefetches every <Link> in the viewport by default. With 14
+      // always-visible sidebar links, that fires ~14 concurrent RSC prefetch
+      // requests on every single page load — against this project's single
+      // `next start` process (no clustering, matching a real local admin's
+      // setup), that request burst was observed to starve the actual
+      // clicked-through navigation's own response indefinitely (confirmed
+      // via network trace: prefetch requests left pending while the
+      // click's real navigation never resolved). See docs/E2E-TESTING.md
+      // "Real application bugs found."
+      prefetch={false}
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
         active

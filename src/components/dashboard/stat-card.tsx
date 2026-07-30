@@ -46,6 +46,10 @@ export function StatCard({
         href={href as Route}
         className="block rounded-xl focus-visible:outline-none"
         aria-label={`${label}. View in ${label}.`}
+        // The Dashboard renders up to a dozen of these at once — same
+        // concurrent-prefetch-storm class of bug already confirmed and fixed
+        // for the sidebar nav (see components/layout/sidebar-nav.tsx).
+        prefetch={false}
       >
         <Card className="transition hover:border-primary/40 hover:shadow-panel">{content}</Card>
       </Link>

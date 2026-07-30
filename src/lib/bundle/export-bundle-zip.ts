@@ -1,7 +1,18 @@
 import type { ContentBundle } from "@/lib/bundle/export-bundle";
 import type { BundleManifest } from "@/lib/models/content-bundle";
-import type { DocumentRecord } from "@/lib/models/document";
 import type { AdminContentRepository } from "@/lib/repositories/admin-content-repository";
+
+/** Both DocumentRecord and PublishedLegislationExport satisfy this — the legislation array's exact shape depends on bundle purpose. */
+interface ExportedFileRef {
+  id: string;
+  file?: { fileName: string };
+}
+
+/** Both SupportProfessional and PublishedProfessionalExport satisfy this — the supportProfessionals array's exact shape depends on bundle purpose. */
+interface ExportedProfileImageRef {
+  id: string;
+  profilePhoto?: { fileName: string };
+}
 
 export interface ZipBundleResult {
   blob: Blob;
@@ -35,12 +46,22 @@ export async function buildZipBundle(
   }
 
   const documentsFolder = zip.folder("documents");
-  const legislation = bundle.data.legislation as DocumentRecord[];
+  const legislation = bundle.data.legislation as ExportedFileRef[];
   for (const doc of legislation) {
     if (!doc.file) continue;
     const blob = await repository.documents.getFileBlob(doc.id);
     if (blob) {
       documentsFolder?.file(`${doc.id}-${doc.file.fileName}`, blob);
+    }
+  }
+
+  const profileImagesFolder = zip.folder("profile-images");
+  const professionals = bundle.data.supportProfessionals as ExportedProfileImageRef[];
+  for (const professional of professionals) {
+    if (!professional.profilePhoto) continue;
+    const blob = await repository.supportProfessionals.getProfileImage(professional.id);
+    if (blob) {
+      profileImagesFolder?.file(`${professional.id}-${professional.profilePhoto.fileName}`, blob);
     }
   }
 

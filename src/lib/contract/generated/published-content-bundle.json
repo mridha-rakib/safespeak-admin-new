@@ -1,0 +1,1287 @@
+{
+  "manifest": {
+    "schemaVersion": "1.0.0",
+    "purpose": "published_content",
+    "generatedAt": "2026-06-01T09:00:00.000Z",
+    "sourceApplication": "safespeak-admin",
+    "recordCounts": {
+      "incidentTypes": 3,
+      "triageLabels": 4,
+      "resourceCategories": 3,
+      "legislationSources": 3,
+      "microcards": 4,
+      "rightsContent": 4,
+      "supportOrganisations": 3,
+      "supportProfessionals": 3,
+      "reportingDestinations": 4,
+      "matchingRules": 8
+    },
+    "warnings": []
+  },
+  "data": {
+    "incidentTypes": [
+      {
+        "id": "demo-incident-online-harassment",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Online harassment",
+        "machineKey": "online_harassment",
+        "description": "Repeated unwanted contact, threats, or abuse through digital platforms.",
+        "displayOrder": 0,
+        "defaultUrgency": "high",
+        "relatedResourceCategoryIds": [
+          "demo-category-legal-rights"
+        ]
+      },
+      {
+        "id": "demo-incident-workplace-discrimination",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Workplace discrimination",
+        "machineKey": "workplace_discrimination",
+        "description": "Unequal or unfair treatment connected to race, ethnicity, or background.",
+        "displayOrder": 1,
+        "defaultUrgency": "medium",
+        "relatedResourceCategoryIds": [
+          "demo-category-legal-rights",
+          "demo-category-emotional-support"
+        ]
+      },
+      {
+        "id": "demo-incident-hate-speech",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Hate speech incident",
+        "machineKey": "hate_speech",
+        "description": "Public or targeted speech that vilifies a person or group.",
+        "displayOrder": 2,
+        "defaultUrgency": "high",
+        "relatedResourceCategoryIds": []
+      }
+    ],
+    "triageLabels": [
+      {
+        "id": "demo-triage-urgent-safety-risk",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Urgent safety risk",
+        "machineKey": "immediate_danger",
+        "description": "Immediate risk to physical safety.",
+        "labelGroup": "safety",
+        "displayOrder": 0
+      },
+      {
+        "id": "demo-triage-escalate-authority",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Escalate to authority",
+        "machineKey": "escalate_to_authority",
+        "description": "Should be routed toward a formal reporting destination.",
+        "labelGroup": "urgency",
+        "displayOrder": 1
+      },
+      {
+        "id": "demo-triage-needs-follow-up",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Needs follow-up",
+        "machineKey": "needs_follow_up",
+        "description": "Not urgent, but should not be left without a next step.",
+        "labelGroup": "support_need",
+        "displayOrder": 2
+      },
+      {
+        "id": "demo-triage-religious-bias",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Religious bias indicator",
+        "machineKey": "religious_bias_indicator",
+        "description": "Contextual indicator only — never a confirmed hate crime or legal finding.",
+        "labelGroup": "bias_indicator",
+        "displayOrder": 4
+      }
+    ],
+    "resourceCategories": [
+      {
+        "id": "demo-category-legal-rights",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Legal rights",
+        "machineKey": "legal",
+        "description": "Content explaining rights in plain language.",
+        "displayOrder": 0,
+        "iconKey": "legal",
+        "accentToken": "primary"
+      },
+      {
+        "id": "demo-category-emotional-support",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Emotional support",
+        "machineKey": "mental_health",
+        "description": "Wellbeing and counselling-oriented resources.",
+        "displayOrder": 1,
+        "iconKey": "mental_health",
+        "accentToken": "success"
+      },
+      {
+        "id": "demo-category-safety",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Safety",
+        "machineKey": "safety",
+        "description": "Immediate personal safety information and planning.",
+        "displayOrder": 3,
+        "iconKey": "safety",
+        "accentToken": "destructive"
+      }
+    ],
+    "legislationSources": [
+      {
+        "id": "demo-doc-discrimination-act-guide",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "title": "Racial Discrimination Act — Plain-Language Summary (Demo)",
+        "legislationName": "Racial Discrimination Act (Demo)",
+        "sourceType": "legislation",
+        "sourceCategory": "Federal legislation",
+        "authorityOrPublisher": "Demo Legal Reference Library",
+        "jurisdiction": "commonwealth",
+        "language": "en",
+        "actNumber": "DEMO-1975-52",
+        "documentVersionLabel": "1.0",
+        "sourceUrl": "https://example.org/legislation/demo-discrimination-act",
+        "effectiveDate": "2025-01-01",
+        "lastUpdatedDate": "2026-05-01",
+        "nextReviewDate": "2027-01-01",
+        "licenseStatus": "government_open_license",
+        "relevantSections": [
+          "Part II — Prohibition of racial discrimination",
+          "Section 18C — Offensive behaviour"
+        ],
+        "topic": "Discrimination law",
+        "tags": [
+          "legislation",
+          "discrimination",
+          "rights"
+        ],
+        "incidentTypeIds": [
+          "demo-incident-workplace-discrimination",
+          "demo-incident-hate-speech"
+        ],
+        "priority": "high",
+        "file": {
+          "fileName": "racial-discrimination-act-summary-demo.pdf",
+          "pageCount": 6
+        },
+        "aiUsagePermission": true,
+        "aiEligible": true
+      },
+      {
+        "id": "demo-doc-workplace-safety-guidance",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "title": "Workplace Health and Safety Guidance Summary (Demo)",
+        "sourceType": "guideline",
+        "sourceCategory": "Regulatory guidance",
+        "authorityOrPublisher": "Demo Workplace Standards Office",
+        "jurisdiction": "qld",
+        "language": "en",
+        "nextReviewDate": "2027-03-01",
+        "licenseStatus": "government_open_license",
+        "relevantSections": [
+          "Section 2 — Employer duties"
+        ],
+        "topic": "Workplace safety",
+        "tags": [
+          "policy",
+          "safety"
+        ],
+        "incidentTypeIds": [
+          "demo-incident-workplace-discrimination"
+        ],
+        "priority": "medium",
+        "file": {
+          "fileName": "workplace-health-safety-guidance-demo.pdf",
+          "pageCount": 4
+        },
+        "aiUsagePermission": false,
+        "aiEligible": false
+      },
+      {
+        "id": "demo-doc-consumer-notice-overdue",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "title": "Consumer Protection Notice Summary (Demo)",
+        "sourceType": "regulation",
+        "sourceCategory": "Consumer protection",
+        "authorityOrPublisher": "Demo Fair Trading Office",
+        "jurisdiction": "wa",
+        "language": "en",
+        "nextReviewDate": "2026-01-15",
+        "licenseStatus": "government_open_license",
+        "relevantSections": [
+          "Section 1 — Scope"
+        ],
+        "topic": "Consumer protection",
+        "tags": [
+          "regulation"
+        ],
+        "incidentTypeIds": [],
+        "priority": "low",
+        "file": {
+          "fileName": "consumer-protection-notice-demo.pdf",
+          "pageCount": 2
+        },
+        "aiUsagePermission": true,
+        "aiEligible": true
+      }
+    ],
+    "microcards": [
+      {
+        "id": "demo-microcard-know-your-right-to-a-safe-workplace",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "title": "Know your right to a safe workplace",
+        "summary": "A short explainer on what a safe workplace legally means (demo content).",
+        "body": "Demo body copy — a real card would give a short, plain-language explanation with a link to fuller rights content.",
+        "topic": "Workplace rights",
+        "tags": [
+          "rights",
+          "workplace"
+        ],
+        "incidentTypeIds": [
+          "demo-incident-workplace-discrimination"
+        ],
+        "cardType": "rights_summary",
+        "resourceCategoryId": "demo-category-legal-rights",
+        "jurisdiction": "nsw",
+        "priority": "normal",
+        "displayOrder": 0,
+        "reviewDueDate": "2027-01-01",
+        "relatedLegislationIds": [
+          "demo-doc-discrimination-act-guide"
+        ],
+        "relatedSupportOrganisationIds": [
+          "demo-org-harborlight-community-support"
+        ],
+        "cta": {
+          "type": "start_report"
+        },
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-microcard-what-counts-as-racial-harassment",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "title": "What counts as racial harassment?",
+        "summary": "Plain-language examples to help someone recognise racial harassment (demo content).",
+        "body": "Demo body copy — a real card would give short, plain-language examples of racially harassing behaviour, with a link to fuller rights information.",
+        "topic": "Understanding harassment",
+        "tags": [
+          "harassment",
+          "education"
+        ],
+        "incidentTypeIds": [
+          "demo-incident-hate-speech"
+        ],
+        "cardType": "quick_guidance",
+        "resourceCategoryId": "demo-category-legal-rights",
+        "jurisdiction": "commonwealth",
+        "priority": "high",
+        "displayOrder": 1,
+        "reviewDueDate": "2026-06-20",
+        "relatedLegislationIds": [
+          "demo-doc-discrimination-act-guide"
+        ],
+        "relatedSupportOrganisationIds": [],
+        "cta": {
+          "type": "view_rights_information",
+          "label": "Learn about your reporting rights",
+          "target": "demo-rights-report-anonymously"
+        },
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-microcard-safety-planning-quick-tip",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "title": "Quick safety planning tip",
+        "summary": "A short, practical safety planning idea (demo content).",
+        "body": "Critical priority here reflects distribution and attention priority only — it is never an emergency determination. If there is immediate danger, contact emergency services.",
+        "tags": [
+          "safety"
+        ],
+        "incidentTypeIds": [],
+        "cardType": "safety_tip",
+        "resourceCategoryId": "demo-category-safety",
+        "jurisdiction": "vic",
+        "priority": "critical",
+        "displayOrder": 2,
+        "reviewDueDate": "2026-04-15",
+        "relatedLegislationIds": [],
+        "relatedSupportOrganisationIds": [],
+        "cta": {
+          "type": "open_internal_route",
+          "label": "Get emergency help",
+          "target": "/emergency"
+        },
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-microcard-general-next-steps-guide",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "title": "Not sure where to start?",
+        "summary": "A few safe first steps if you're not sure what kind of help you need yet (demo content).",
+        "body": "Demo body copy — a real card would explain that it's okay not to have all the details yet, and offer a few safe, low-commitment first steps (e.g. exploring support options, saving notes privately, or learning about rights) without assuming any specific incident has occurred.",
+        "tags": [
+          "orientation",
+          "general"
+        ],
+        "incidentTypeIds": [],
+        "cardType": "next_step",
+        "resourceCategoryId": "demo-category-emotional-support",
+        "jurisdiction": "commonwealth",
+        "priority": "normal",
+        "displayOrder": 7,
+        "reviewDueDate": "2027-04-01",
+        "relatedLegislationIds": [],
+        "relatedSupportOrganisationIds": [],
+        "cta": {
+          "type": "none"
+        },
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      }
+    ],
+    "rightsContent": [
+      {
+        "id": "demo-rights-report-anonymously",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "title": "Your right to report anonymously",
+        "summary": "An overview of anonymous reporting options (demo content, not legal advice).",
+        "body": "Demo body copy — a real record would explain, in plain language, what anonymous reporting options exist and what to expect from each.",
+        "jurisdiction": "commonwealth",
+        "relatedLegislationIds": [
+          "demo-doc-discrimination-act-guide"
+        ],
+        "incidentTypeIds": [
+          "demo-incident-online-harassment"
+        ],
+        "tags": [
+          "reporting",
+          "privacy"
+        ],
+        "contentType": "reporting_rights",
+        "resourceCategoryIds": [
+          "demo-category-legal-rights"
+        ],
+        "relatedSupportOrganisationIds": [],
+        "priority": "high",
+        "reviewDueDate": "2027-01-01",
+        "effectiveFromDate": "2025-01-01",
+        "publishedDate": "2026-06-01T09:00:00.000Z",
+        "publicDisclaimer": "This information is general and educational only — it is not personalised legal advice."
+      },
+      {
+        "id": "demo-rights-privacy-and-your-information",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "title": "Privacy and your personal information",
+        "summary": "An overview of privacy protections that may apply (demo content, not legal advice).",
+        "body": "Demo body copy — a real record would explain, in plain language, how personal information is generally protected and what options exist if it is mishandled.",
+        "jurisdiction": "vic",
+        "relatedLegislationIds": [
+          "demo-doc-discrimination-act-guide"
+        ],
+        "incidentTypeIds": [],
+        "tags": [
+          "privacy"
+        ],
+        "contentType": "privacy_rights",
+        "resourceCategoryIds": [
+          "demo-category-legal-rights"
+        ],
+        "relatedSupportOrganisationIds": [],
+        "priority": "normal",
+        "reviewDueDate": "2026-06-18",
+        "publishedDate": "2026-06-01T09:00:00.000Z",
+        "publicDisclaimer": "This information is general and educational only — it is not personalised legal advice."
+      },
+      {
+        "id": "demo-rights-emotional-support-options",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "title": "Emotional support options explained",
+        "summary": "An overview of the kinds of emotional support available (demo content).",
+        "body": "Demo body copy — a real record would describe, in plain language, the kinds of emotional support available and how to access them.",
+        "jurisdiction": "qld",
+        "relatedLegislationIds": [],
+        "incidentTypeIds": [],
+        "tags": [
+          "support"
+        ],
+        "contentType": "support_access",
+        "resourceCategoryIds": [
+          "demo-category-emotional-support"
+        ],
+        "relatedSupportOrganisationIds": [
+          "demo-org-harborlight-community-support"
+        ],
+        "priority": "normal",
+        "reviewDueDate": "2027-02-01",
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-rights-community-and-language-support",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "title": "Community and language support services",
+        "summary": "General information about interpreter services and community organisations that can help (demo content, not immigration advice).",
+        "body": "Demo body copy — a real record would explain, in plain language, that free interpreter services and community organisations exist to help someone understand their options and access services, and that this is general information only, not personalised immigration or legal advice.",
+        "jurisdiction": "commonwealth",
+        "relatedLegislationIds": [],
+        "incidentTypeIds": [],
+        "tags": [
+          "community",
+          "language-support",
+          "migrant"
+        ],
+        "contentType": "support_access",
+        "resourceCategoryIds": [
+          "demo-category-emotional-support"
+        ],
+        "relatedSupportOrganisationIds": [
+          "demo-org-harborlight-community-support"
+        ],
+        "priority": "normal",
+        "reviewDueDate": "2027-05-01",
+        "publishedDate": "2026-06-01T09:00:00.000Z",
+        "publicDisclaimer": "This is general information only, not personalised immigration or legal advice."
+      }
+    ],
+    "supportOrganisations": [
+      {
+        "id": "demo-org-harborlight-community-support",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Harborlight Community Support (Demo)",
+        "organisationType": "community_support",
+        "shortDescription": "Fictional demo organisation offering general community support.",
+        "fullDescription": "Demo body copy — a real record would describe the full range of community support services offered, who they are for, and how to get started.",
+        "servicesOffered": [
+          "Counselling referral",
+          "Peer support groups"
+        ],
+        "resourceCategoryIds": [
+          "demo-category-emotional-support"
+        ],
+        "incidentTypeIds": [
+          "demo-incident-online-harassment",
+          "demo-incident-hate-speech"
+        ],
+        "jurisdictions": [
+          "nsw",
+          "vic"
+        ],
+        "australiaWide": false,
+        "audienceGroups": [],
+        "languages": [
+          "en"
+        ],
+        "serviceDeliveryModes": [
+          "phone",
+          "video",
+          "in_person"
+        ],
+        "tags": [],
+        "emergencyService": false,
+        "phone": "0000 000 001",
+        "email": "contact@example.org",
+        "website": "https://example.org/harborlight-demo",
+        "bookingUrl": "https://example.org/book/harborlight-demo",
+        "address": "1 Demo Street, Sample City",
+        "verificationStatus": "verified",
+        "verifiedDate": "2026-05-01",
+        "verificationExpiryDate": "2027-05-01",
+        "reviewDueDate": "2027-01-01",
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-org-coastal-legal-aid-clinic",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Coastal Legal Aid Clinic (Demo)",
+        "organisationType": "legal_service",
+        "shortDescription": "Fictional demo legal aid clinic used to exercise verified-organisation display.",
+        "fullDescription": "Demo body copy — a real record would describe eligibility for free legal advice and how a discrimination complaint can be raised.",
+        "servicesOffered": [
+          "Free legal advice",
+          "Discrimination complaints support"
+        ],
+        "resourceCategoryIds": [
+          "demo-category-legal-rights"
+        ],
+        "incidentTypeIds": [
+          "demo-incident-workplace-discrimination"
+        ],
+        "jurisdictions": [
+          "nsw"
+        ],
+        "australiaWide": false,
+        "audienceGroups": [],
+        "languages": [
+          "en"
+        ],
+        "serviceDeliveryModes": [
+          "phone",
+          "in_person"
+        ],
+        "tags": [],
+        "emergencyService": false,
+        "phone": "0000 000 002",
+        "website": "https://example.org/coastal-legal-aid-demo",
+        "verificationStatus": "verified",
+        "verifiedDate": "2026-04-01",
+        "verificationExpiryDate": "2027-04-01",
+        "reviewDueDate": "2027-02-01",
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-org-riverside-crisis-line",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Riverside Crisis Line (Demo)",
+        "organisationType": "crisis_support",
+        "shortDescription": "Fictional demo crisis line, deliberately published while unverified.",
+        "fullDescription": "Demo body copy — a real record would describe what the crisis line offers and how quickly someone can expect to be connected.",
+        "servicesOffered": [
+          "Crisis phone line"
+        ],
+        "resourceCategoryIds": [
+          "demo-category-safety"
+        ],
+        "incidentTypeIds": [],
+        "jurisdictions": [],
+        "australiaWide": true,
+        "audienceGroups": [],
+        "languages": [
+          "en"
+        ],
+        "serviceDeliveryModes": [
+          "phone"
+        ],
+        "tags": [],
+        "emergencyService": false,
+        "phone": "0000 000 003",
+        "email": "crisisline.demo@example.org",
+        "verificationStatus": "not_verified",
+        "reviewDueDate": "2026-06-18",
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      }
+    ],
+    "supportProfessionals": [
+      {
+        "id": "demo-advocate-amina-farouk",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "fullName": "Amina Farouk",
+        "displayName": "Amina F.",
+        "professionalType": "counsellor",
+        "organisationId": "demo-org-harborlight-community-support",
+        "jobTitle": "Senior Counsellor",
+        "shortIntroduction": "Fictional demo counsellor used to exercise a verified, published profile.",
+        "fullBiography": "Demo body copy — a real profile would describe this counsellor's background, approach, and the communities they typically support.",
+        "areasOfSupport": [
+          "Trauma-informed counselling"
+        ],
+        "resourceCategoryIds": [
+          "demo-category-emotional-support"
+        ],
+        "incidentTypeIds": [
+          "demo-incident-online-harassment"
+        ],
+        "triageLabelIds": [
+          "demo-triage-needs-follow-up"
+        ],
+        "specialisations": [
+          "Racial trauma"
+        ],
+        "communitiesSupported": [
+          "Multicultural communities"
+        ],
+        "ageGroupsSupported": [
+          "Adults"
+        ],
+        "jurisdictions": [
+          "nsw",
+          "vic"
+        ],
+        "australiaWide": false,
+        "serviceLocations": [
+          "Sample City"
+        ],
+        "supportModes": [
+          "video",
+          "phone"
+        ],
+        "availability": "Weekdays, demo hours only",
+        "timeZone": "Demo/Local",
+        "languages": [
+          "en"
+        ],
+        "accessibilitySupport": [
+          "Captioned video calls"
+        ],
+        "costType": "sliding_scale",
+        "acceptingNewReferrals": true,
+        "phone": "0000 000 010",
+        "email": "amina.demo@example.org",
+        "bookingUrl": "https://example.org/book/amina-demo",
+        "verificationStatus": "verified",
+        "verifiedDate": "2026-05-01",
+        "verificationExpiryDate": "2027-05-01",
+        "credentials": [
+          "Demo Counselling Registration #DEMO-001"
+        ],
+        "nextReviewDate": "2027-01-01",
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-advocate-daniel-osei",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "fullName": "Daniel Osei",
+        "professionalType": "advocate",
+        "jobTitle": "Community Advocate",
+        "shortIntroduction": "Fictional demo advocate — deliberately published while unverified to exercise the 'Not verified' warning.",
+        "fullBiography": "Demo body copy — a real profile would describe this advocate's independent practice and how they typically support someone making a report.",
+        "areasOfSupport": [
+          "Incident reporting support"
+        ],
+        "resourceCategoryIds": [],
+        "incidentTypeIds": [
+          "demo-incident-hate-speech"
+        ],
+        "triageLabelIds": [
+          "demo-triage-escalate-authority"
+        ],
+        "specialisations": [
+          "Report preparation"
+        ],
+        "communitiesSupported": [],
+        "ageGroupsSupported": [],
+        "jurisdictions": [
+          "nsw"
+        ],
+        "australiaWide": false,
+        "serviceLocations": [],
+        "supportModes": [
+          "email"
+        ],
+        "languages": [
+          "en"
+        ],
+        "accessibilitySupport": [],
+        "costType": "free",
+        "acceptingNewReferrals": false,
+        "email": "daniel.demo@example.org",
+        "verificationStatus": "not_verified",
+        "credentials": [],
+        "nextReviewDate": "2027-02-01",
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-counsellor-jordan-blake",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "fullName": "Jordan Blake",
+        "professionalType": "counsellor",
+        "profilePhoto": {
+          "fileName": "jordan-blake-demo.jpg",
+          "fileSizeBytes": 182400,
+          "fileType": "image/jpeg"
+        },
+        "shortIntroduction": "Fictional demo independent counsellor whose verification has since expired.",
+        "fullBiography": "Demo body copy — a real profile would describe this counsellor's independent practice and languages spoken.",
+        "areasOfSupport": [
+          "Grief and loss counselling"
+        ],
+        "resourceCategoryIds": [],
+        "incidentTypeIds": [],
+        "triageLabelIds": [],
+        "specialisations": [
+          "Bilingual counselling"
+        ],
+        "communitiesSupported": [],
+        "ageGroupsSupported": [],
+        "jurisdictions": [
+          "vic"
+        ],
+        "australiaWide": false,
+        "serviceLocations": [],
+        "supportModes": [
+          "video",
+          "chat"
+        ],
+        "languages": [
+          "en",
+          "ar"
+        ],
+        "accessibilitySupport": [],
+        "costType": "sliding_scale",
+        "acceptingNewReferrals": true,
+        "email": "jordan.blake.demo@example.org",
+        "verificationStatus": "verification_expired",
+        "verifiedDate": "2024-06-01",
+        "verificationExpiryDate": "2025-06-01",
+        "credentials": [],
+        "nextReviewDate": "2027-01-01",
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      }
+    ],
+    "reportingDestinations": [
+      {
+        "id": "demo-destination-local-police-non-emergency",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Local Police Non-Emergency Line (Demo)",
+        "destinationType": "police",
+        "description": "Fictional demo entry standing in for a real non-emergency reporting line.",
+        "resourceCategoryIds": [],
+        "incidentTypeIds": [
+          "demo-incident-hate-speech"
+        ],
+        "jurisdictions": [
+          "nsw",
+          "vic"
+        ],
+        "australiaWide": false,
+        "audienceGroups": [],
+        "languages": [
+          "en"
+        ],
+        "tags": [],
+        "reportingMethods": [
+          "phone"
+        ],
+        "phone": "0000 000 020",
+        "reportingInstructions": "Demo instructions — replace with a verified real destination before publishing.",
+        "anonymousReporting": "no",
+        "confidentialityInformation": "Demo text — a real record would state this line's actual confidentiality practice.",
+        "emergencySuitability": "no",
+        "reviewDueDate": "2027-01-01",
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-destination-state-legal-aid-commission",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "State Legal Aid Commission (Demo)",
+        "destinationType": "legal_aid",
+        "description": "Fictional demo legal aid commission intake line.",
+        "fullDescription": "Demo body copy — a real record would describe intake hours and what to bring to a first appointment.",
+        "resourceCategoryIds": [
+          "demo-category-legal-rights"
+        ],
+        "incidentTypeIds": [],
+        "jurisdictions": [
+          "nsw"
+        ],
+        "australiaWide": false,
+        "audienceGroups": [],
+        "languages": [
+          "en"
+        ],
+        "tags": [],
+        "reportingMethods": [
+          "phone",
+          "email",
+          "website"
+        ],
+        "phone": "0000 000 021",
+        "email": "legalaid.demo@example.org",
+        "website": "https://example.org/legal-aid-demo",
+        "reportingInstructions": "Demo instructions — call or email during business hours to arrange an intake appointment.",
+        "anonymousReporting": "no",
+        "emergencySuitability": "no",
+        "reviewDueDate": "2027-02-01",
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-destination-discrimination-commission",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Discrimination Complaints Commission (Demo)",
+        "destinationType": "discrimination_body",
+        "description": "Fictional demo discrimination complaints body with an online form.",
+        "resourceCategoryIds": [
+          "demo-category-legal-rights"
+        ],
+        "incidentTypeIds": [
+          "demo-incident-workplace-discrimination",
+          "demo-incident-hate-speech"
+        ],
+        "jurisdictions": [],
+        "australiaWide": true,
+        "audienceGroups": [],
+        "languages": [
+          "en"
+        ],
+        "tags": [],
+        "reportingMethods": [
+          "online_form"
+        ],
+        "onlineReportingUrl": "https://example.org/report/discrimination-demo",
+        "reportingInstructions": "Demo instructions — complete the online form; a case officer will follow up.",
+        "anonymousReporting": "yes",
+        "emergencySuitability": "no",
+        "reviewDueDate": "2026-06-20",
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-destination-community-helpline",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Community Support Helpline (Demo)",
+        "destinationType": "community_organisation",
+        "description": "Fictional demo 24-hour community helpline.",
+        "resourceCategoryIds": [],
+        "incidentTypeIds": [],
+        "jurisdictions": [],
+        "australiaWide": true,
+        "audienceGroups": [],
+        "languages": [
+          "en"
+        ],
+        "tags": [],
+        "reportingMethods": [
+          "phone"
+        ],
+        "phone": "0000 000 023",
+        "reportingInstructions": "Demo instructions — call anytime; the line is staffed 24 hours in this fictional example.",
+        "anonymousReporting": "yes",
+        "confidentialityInformation": "Demo text — a real record would state this helpline's actual confidentiality practice.",
+        "emergencySuitability": "yes",
+        "reviewDueDate": "2027-04-01",
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      }
+    ],
+    "matchingRules": [
+      {
+        "id": "demo-rule-domestic-violence-safety-support",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Domestic violence → safety planning & support (demo)",
+        "machineKey": "domestic_violence_safety_support",
+        "description": "Surfaces safety planning guidance and crisis support for a domestic/family violence conversation.",
+        "priority": 1,
+        "enabled": true,
+        "topicKeys": [
+          "domestic_violence"
+        ],
+        "incidentTypeIds": [],
+        "triageLabelIds": [
+          "demo-triage-urgent-safety-risk"
+        ],
+        "resourceCategoryIds": [
+          "demo-category-safety"
+        ],
+        "jurisdictions": [
+          "nsw",
+          "vic"
+        ],
+        "urgencyLevels": [
+          "high",
+          "critical"
+        ],
+        "supportNeeds": [
+          "safety_planning"
+        ],
+        "legislationIds": [],
+        "microcardIds": [
+          "demo-microcard-safety-planning-quick-tip"
+        ],
+        "rightsContentIds": [
+          "demo-rights-emotional-support-options"
+        ],
+        "supportOrganisationIds": [
+          "demo-org-riverside-crisis-line"
+        ],
+        "supportProfessionalIds": [],
+        "reportingDestinationIds": [
+          "demo-destination-community-helpline"
+        ],
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-rule-racial-abuse-know-your-rights",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Racial abuse → know your rights & report (demo)",
+        "machineKey": "racial_abuse_know_your_rights",
+        "description": "Connects a racial abuse or hate speech conversation to rights information, support, and reporting pathways.",
+        "priority": 2,
+        "enabled": true,
+        "topicKeys": [
+          "racial_abuse"
+        ],
+        "incidentTypeIds": [
+          "demo-incident-hate-speech"
+        ],
+        "triageLabelIds": [
+          "demo-triage-religious-bias"
+        ],
+        "resourceCategoryIds": [
+          "demo-category-legal-rights"
+        ],
+        "jurisdictions": [],
+        "urgencyLevels": [
+          "moderate",
+          "high"
+        ],
+        "supportNeeds": [],
+        "legislationIds": [
+          "demo-doc-discrimination-act-guide"
+        ],
+        "microcardIds": [
+          "demo-microcard-what-counts-as-racial-harassment"
+        ],
+        "rightsContentIds": [
+          "demo-rights-report-anonymously"
+        ],
+        "supportOrganisationIds": [
+          "demo-org-harborlight-community-support"
+        ],
+        "supportProfessionalIds": [
+          "demo-advocate-amina-farouk"
+        ],
+        "reportingDestinationIds": [
+          "demo-destination-discrimination-commission"
+        ],
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-rule-cyber-scam-report-and-protect",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Cyber scam → reporting & protection basics (demo)",
+        "machineKey": "cyber_scam_report_and_protect",
+        "description": "Connects a cyber scam conversation to privacy guidance and a reporting pathway. Currently disabled pending a wording review.",
+        "priority": 3,
+        "enabled": false,
+        "topicKeys": [
+          "cyber_scam"
+        ],
+        "incidentTypeIds": [],
+        "triageLabelIds": [],
+        "resourceCategoryIds": [
+          "demo-category-legal-rights"
+        ],
+        "jurisdictions": [],
+        "urgencyLevels": [
+          "moderate"
+        ],
+        "supportNeeds": [
+          "financial_loss",
+          "identity_theft"
+        ],
+        "legislationIds": [],
+        "microcardIds": [],
+        "rightsContentIds": [
+          "demo-rights-privacy-and-your-information"
+        ],
+        "supportOrganisationIds": [
+          "demo-org-coastal-legal-aid-clinic"
+        ],
+        "supportProfessionalIds": [],
+        "reportingDestinationIds": [
+          "demo-destination-local-police-non-emergency"
+        ],
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-rule-domestic-violence-baseline-support",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Domestic violence → baseline support (demo)",
+        "machineKey": "domestic_violence_baseline_support",
+        "description": "Baseline Domestic Violence coverage, topic-only (no jurisdiction/urgency condition), so it reliably triggers regardless of what the conversation has captured so far. demo-rule-domestic-violence-safety-support above remains the richer, jurisdiction/urgency-specific example.",
+        "priority": 5,
+        "enabled": true,
+        "topicKeys": [
+          "domestic_violence"
+        ],
+        "incidentTypeIds": [],
+        "triageLabelIds": [],
+        "resourceCategoryIds": [],
+        "jurisdictions": [],
+        "urgencyLevels": [],
+        "supportNeeds": [],
+        "legislationIds": [],
+        "microcardIds": [
+          "demo-microcard-safety-planning-quick-tip"
+        ],
+        "rightsContentIds": [
+          "demo-rights-emotional-support-options"
+        ],
+        "supportOrganisationIds": [
+          "demo-org-riverside-crisis-line"
+        ],
+        "supportProfessionalIds": [],
+        "reportingDestinationIds": [
+          "demo-destination-community-helpline"
+        ],
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-rule-racial-abuse-baseline-support",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Racial abuse → baseline rights & support (demo)",
+        "machineKey": "racial_abuse_baseline_support",
+        "description": "Baseline Racial Abuse coverage, topic-only (no triage-label/urgency condition), so it reliably triggers regardless of what the conversation has captured so far. demo-rule-racial-abuse-know-your-rights above remains the richer, triage-label/urgency-specific example.",
+        "priority": 5,
+        "enabled": true,
+        "topicKeys": [
+          "racial_abuse"
+        ],
+        "incidentTypeIds": [],
+        "triageLabelIds": [],
+        "resourceCategoryIds": [],
+        "jurisdictions": [],
+        "urgencyLevels": [],
+        "supportNeeds": [],
+        "legislationIds": [],
+        "microcardIds": [
+          "demo-microcard-what-counts-as-racial-harassment"
+        ],
+        "rightsContentIds": [
+          "demo-rights-report-anonymously"
+        ],
+        "supportOrganisationIds": [
+          "demo-org-harborlight-community-support"
+        ],
+        "supportProfessionalIds": [
+          "demo-advocate-amina-farouk"
+        ],
+        "reportingDestinationIds": [],
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-rule-general-assistant-support-navigation",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "General assistant → support navigation (demo)",
+        "machineKey": "general_assistant_support_navigation",
+        "description": "Baseline General Assistant coverage: neutral orientation guidance and support-navigation content. Does not assume any specific incident occurred.",
+        "priority": 5,
+        "enabled": true,
+        "topicKeys": [
+          "general_assistant"
+        ],
+        "incidentTypeIds": [],
+        "triageLabelIds": [],
+        "resourceCategoryIds": [],
+        "jurisdictions": [],
+        "urgencyLevels": [],
+        "supportNeeds": [],
+        "legislationIds": [],
+        "microcardIds": [
+          "demo-microcard-general-next-steps-guide"
+        ],
+        "rightsContentIds": [
+          "demo-rights-emotional-support-options"
+        ],
+        "supportOrganisationIds": [
+          "demo-org-harborlight-community-support"
+        ],
+        "supportProfessionalIds": [],
+        "reportingDestinationIds": [],
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-rule-migrant-challenges-community-support",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Migrant challenges → community support (demo)",
+        "machineKey": "migrant_challenges_community_support",
+        "description": "Baseline Migrant Challenges coverage: general community support, language-access information, and a support helpline. Not personalised immigration advice.",
+        "priority": 5,
+        "enabled": true,
+        "topicKeys": [
+          "migrant_challenges"
+        ],
+        "incidentTypeIds": [],
+        "triageLabelIds": [],
+        "resourceCategoryIds": [],
+        "jurisdictions": [],
+        "urgencyLevels": [],
+        "supportNeeds": [],
+        "legislationIds": [],
+        "microcardIds": [],
+        "rightsContentIds": [
+          "demo-rights-community-and-language-support"
+        ],
+        "supportOrganisationIds": [
+          "demo-org-harborlight-community-support"
+        ],
+        "supportProfessionalIds": [],
+        "reportingDestinationIds": [
+          "demo-destination-community-helpline"
+        ],
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      },
+      {
+        "id": "demo-rule-cyber-scam-evidence-and-support",
+        "status": "published",
+        "isDemo": true,
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z",
+        "version": 1,
+        "name": "Cyber scam → evidence, protection & reporting (demo)",
+        "machineKey": "cyber_scam_evidence_and_support",
+        "description": "Baseline Cyber Scam coverage: privacy/evidence-preservation guidance, legal support, and a non-emergency reporting pathway.",
+        "priority": 4,
+        "enabled": true,
+        "topicKeys": [
+          "cyber_scam"
+        ],
+        "incidentTypeIds": [],
+        "triageLabelIds": [],
+        "resourceCategoryIds": [],
+        "jurisdictions": [],
+        "urgencyLevels": [],
+        "supportNeeds": [],
+        "legislationIds": [],
+        "microcardIds": [],
+        "rightsContentIds": [
+          "demo-rights-privacy-and-your-information"
+        ],
+        "supportOrganisationIds": [
+          "demo-org-coastal-legal-aid-clinic"
+        ],
+        "supportProfessionalIds": [],
+        "reportingDestinationIds": [
+          "demo-destination-local-police-non-emergency"
+        ],
+        "publishedDate": "2026-06-01T09:00:00.000Z"
+      }
+    ]
+  }
+}

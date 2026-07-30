@@ -2,11 +2,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { baseRecordSchema, createBaseFields } from "../../src/lib/models/base";
-import { canPublishDocument, documentSchema } from "../../src/lib/models/document";
+import { documentSchema } from "../../src/lib/models/document";
+import { isPublishable } from "../../src/lib/legislation/readiness";
 import {
   isPublishableWhileUnverified,
   supportProfessionalSchema,
 } from "../../src/lib/models/support-professional";
+import { makeTestDocument } from "./helpers/document-fixture";
 
 test("createBaseFields produces a record that satisfies baseRecordSchema", () => {
   const record = createBaseFields();
@@ -17,8 +19,8 @@ test("createBaseFields produces a record that satisfies baseRecordSchema", () =>
 });
 
 test("a legislation document cannot publish without a completed legal review", () => {
-  assert.equal(canPublishDocument({ legalReviewComplete: false }), false);
-  assert.equal(canPublishDocument({ legalReviewComplete: true }), true);
+  assert.equal(isPublishable(makeTestDocument({ legalReviewComplete: false })), false);
+  assert.equal(isPublishable(makeTestDocument({ legalReviewComplete: true })), true);
 });
 
 test("documentSchema rejects a record missing a required title", () => {

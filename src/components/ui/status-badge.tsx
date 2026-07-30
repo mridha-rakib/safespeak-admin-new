@@ -1,8 +1,8 @@
-import { IconAlertTriangleFilled, IconCircleCheckFilled } from "@tabler/icons-react";
+import { IconAlertTriangleFilled, IconCircleCheckFilled, IconClockFilled, IconHelpCircleFilled } from "@tabler/icons-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
 import type { ContentStatus } from "@/lib/models/base";
-import type { VerificationStatus } from "@/lib/models/support-professional";
+import type { VerificationStatus } from "@/lib/models/verification";
 
 const CONTENT_STATUS_LABEL: Record<ContentStatus, string> = {
   draft: "Draft",
@@ -35,16 +35,36 @@ export function ContentStatusBadge({
   );
 }
 
-const VERIFICATION_LABEL: Record<VerificationStatus, string> = {
-  verified: "Verified",
+/** Short badge text — deliberately more compact than VERIFICATION_STATUS_LABEL in lib/models/verification.ts, which is written for form/detail-page prose, not a badge. */
+const VERIFICATION_BADGE_LABEL: Record<VerificationStatus, string> = {
   not_verified: "Not verified",
-  pending_review: "Verification pending",
+  verification_pending: "Verification pending",
+  verified: "Verified",
+  verification_expired: "Verification expired",
+  verification_rejected: "Verification not confirmed",
+};
+
+const VERIFICATION_BADGE_TONE: Record<VerificationStatus, BadgeTone> = {
+  not_verified: "warning",
+  verification_pending: "neutral",
+  verified: "success",
+  verification_expired: "warning",
+  verification_rejected: "destructive",
+};
+
+const VERIFICATION_BADGE_ICON: Record<VerificationStatus, typeof IconCircleCheckFilled> = {
+  not_verified: IconAlertTriangleFilled,
+  verification_pending: IconClockFilled,
+  verified: IconCircleCheckFilled,
+  verification_expired: IconAlertTriangleFilled,
+  verification_rejected: IconHelpCircleFilled,
 };
 
 /**
- * Verification status for support professionals. Communicated through the
- * icon AND the text label (never color alone), per the "Not verified must
- * never be confused with Verified" requirement.
+ * Local administrative verification status for Support Organisations and
+ * Advocates/Counsellors. Communicated through the icon AND the text label
+ * (never color alone), per the "Not verified must never be confused with
+ * Verified" requirement — see lib/models/verification.ts.
  */
 export function VerificationBadge({
   status,
@@ -53,19 +73,11 @@ export function VerificationBadge({
   status: VerificationStatus;
   className?: string;
 }) {
-  if (status === "verified") {
-    return (
-      <Badge tone="success" className={className}>
-        <IconCircleCheckFilled size={13} aria-hidden="true" />
-        {VERIFICATION_LABEL[status]}
-      </Badge>
-    );
-  }
-
+  const Icon = VERIFICATION_BADGE_ICON[status];
   return (
-    <Badge tone="warning" className={className}>
-      <IconAlertTriangleFilled size={13} aria-hidden="true" />
-      {VERIFICATION_LABEL[status]}
+    <Badge tone={VERIFICATION_BADGE_TONE[status]} className={className}>
+      <Icon size={13} aria-hidden="true" />
+      {VERIFICATION_BADGE_LABEL[status]}
     </Badge>
   );
 }

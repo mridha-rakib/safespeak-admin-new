@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { AUSTRALIAN_JURISDICTION_VALUES } from "@/lib/jurisdictions";
 import { baseRecordSchema } from "@/lib/models/base";
 
 /**
@@ -68,7 +69,7 @@ export const documentSchema = baseRecordSchema.extend({
   sourceType: z.enum(DOCUMENT_SOURCE_TYPES).default("legislation"),
   sourceCategory: z.string().optional(),
   authorityOrPublisher: z.string().optional(),
-  jurisdiction: z.string().optional(),
+  jurisdiction: z.enum(AUSTRALIAN_JURISDICTION_VALUES).optional(),
   language: z.string().default("en"),
   actNumber: z.string().optional(),
   documentVersionLabel: z.string().optional(),
@@ -95,11 +96,6 @@ export type DocumentRecord = z.infer<typeof documentSchema> & {
   /** Raw PDF bytes, stored directly in IndexedDB by Dexie. Never present in JSON bundle exports. */
   fileBlob?: Blob;
 };
-
-/** Legislation may only publish once legal review is complete — see lib/publishing/workflow.ts. */
-export function canPublishDocument(doc: Pick<DocumentRecord, "legalReviewComplete">): boolean {
-  return doc.legalReviewComplete;
-}
 
 export const documentChunkSchema = z.object({
   id: z.string().min(1),

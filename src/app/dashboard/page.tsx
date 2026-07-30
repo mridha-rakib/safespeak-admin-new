@@ -3,10 +3,15 @@
 import {
   IconAlertTriangle,
   IconBuildingCommunity,
+  IconCards,
   IconCircleCheck,
   IconClockPause,
   IconFileCheck,
+  IconFlag,
+  IconGavel,
   IconPencil,
+  IconRoute,
+  IconShieldCheck,
   IconUsersGroup,
 } from "@tabler/icons-react";
 
@@ -71,6 +76,162 @@ export default function DashboardPage() {
           value={summary?.ragReadyDocumentCount}
           icon={IconFileCheck}
           href="/content/knowledge-legislation"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          label="Published microcards"
+          value={summary?.publishedMicrocardCount}
+          icon={IconCards}
+          href="/content/microcards"
+        />
+        <StatCard
+          label="Draft microcards"
+          value={summary?.draftMicrocardCount}
+          icon={IconPencil}
+          href="/content/microcards"
+        />
+        <StatCard
+          label="Published rights content"
+          value={summary?.publishedRightsContentCount}
+          icon={IconGavel}
+          href="/content/rights-legal-information"
+        />
+        <StatCard
+          label="Rights content awaiting review"
+          value={summary?.rightsContentAwaitingReviewCount}
+          icon={IconClockPause}
+          href="/content/rights-legal-information"
+        />
+        <StatCard
+          label="Educational content needing update"
+          value={summary?.educationalContentNeedsUpdateCount}
+          icon={IconAlertTriangle}
+          href="/publishing/review-queue"
+          tone="warning"
+        />
+        <StatCard
+          label="Educational content review overdue"
+          value={summary?.educationalContentReviewOverdueCount}
+          icon={IconAlertTriangle}
+          href="/publishing/review-queue"
+          tone="warning"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          label="Published Support Organisations"
+          value={summary?.publishedOrganisationCount}
+          icon={IconBuildingCommunity}
+          href="/content/support-organisations"
+        />
+        <StatCard
+          label="Organisations awaiting review"
+          value={summary?.organisationAwaitingReviewCount}
+          icon={IconClockPause}
+          href="/content/support-organisations"
+        />
+        <StatCard
+          label="Verified organisations"
+          value={summary?.verifiedOrganisationCount}
+          icon={IconShieldCheck}
+          href="/content/support-organisations"
+        />
+        <StatCard
+          label="Published Advocates & Counsellors"
+          value={summary?.publishedProfessionalCount}
+          icon={IconUsersGroup}
+          href="/content/advocates-counsellors"
+        />
+        <StatCard
+          label="Published but not verified professionals"
+          value={summary?.publishedUnverifiedProfessionalCount}
+          icon={IconAlertTriangle}
+          href="/content/advocates-counsellors"
+          tone="warning"
+        />
+        <StatCard
+          label="Professionals awaiting review"
+          value={summary?.professionalAwaitingReviewCount}
+          icon={IconClockPause}
+          href="/content/advocates-counsellors"
+        />
+        <StatCard
+          label="Published Reporting Destinations"
+          value={summary?.publishedDestinationCount}
+          icon={IconFlag}
+          href="/content/reporting-destinations"
+        />
+        <StatCard
+          label="Reporting Destinations awaiting review"
+          value={summary?.destinationAwaitingReviewCount}
+          icon={IconClockPause}
+          href="/content/reporting-destinations"
+        />
+        <StatCard
+          label="Support Directory records needing update"
+          value={summary?.supportDirectoryNeedsUpdateCount}
+          icon={IconAlertTriangle}
+          href="/publishing/review-queue"
+          tone="warning"
+        />
+        <StatCard
+          label="Support Directory records review overdue"
+          value={summary?.supportDirectoryReviewOverdueCount}
+          icon={IconAlertTriangle}
+          href="/publishing/review-queue"
+          tone="warning"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          label="Published matching rules"
+          value={summary?.publishedMatchingRuleCount}
+          icon={IconRoute}
+          href="/taxonomy/matching-rules"
+        />
+        <StatCard
+          label="Enabled published matching rules"
+          value={summary?.enabledPublishedMatchingRuleCount}
+          icon={IconRoute}
+          href="/taxonomy/matching-rules"
+        />
+        <StatCard
+          label="Disabled published matching rules"
+          value={summary?.disabledPublishedMatchingRuleCount}
+          icon={IconRoute}
+          href="/taxonomy/matching-rules"
+          tone="warning"
+        />
+        <StatCard
+          label="Matching rules awaiting review"
+          value={summary?.matchingRulesAwaitingReviewCount}
+          icon={IconClockPause}
+          href="/taxonomy/matching-rules"
+        />
+        <StatCard
+          label="Matching rules needing update"
+          value={summary?.matchingRulesNeedsUpdateCount}
+          icon={IconAlertTriangle}
+          href="/taxonomy/matching-rules"
+          tone="warning"
+        />
+        <StatCard
+          label="Matching rules review overdue"
+          value={summary?.matchingRulesReviewOverdueCount}
+          icon={IconAlertTriangle}
+          href="/taxonomy/matching-rules"
+          tone="warning"
+        />
+        <StatCard
+          label="Matching rules with broken relationships"
+          value={summary?.matchingRulesWithBrokenRelationshipsCount}
+          icon={IconAlertTriangle}
+          href="/taxonomy/matching-rules"
+          tone="warning"
         />
       </div>
 

@@ -87,7 +87,10 @@ test("buildSeedAuditEvents produces one event per seeded content record plus a s
     seedRightsContent.length +
     seedSupportOrganisations.length +
     seedSupportProfessionals.length +
-    seedReportingDestinations.length;
+    seedReportingDestinations.length +
+    seedIncidentTypes.length +
+    seedTriageLabels.length +
+    seedResourceCategories.length;
 
   const events = buildSeedAuditEvents("2026-06-01T09:00:00.000Z");
   assert.equal(events.length, contentRecordCount + 1);

@@ -33,18 +33,21 @@ test("confirming reset demo data succeeds and records an audit event", async ({ 
 
   await dialog.getByRole("button", { name: "Reset demo data" }).click();
   await expect(dialog.getByText("Demo data reset")).toBeVisible();
-  await dialog.getByRole("button", { name: "Close" }).click();
+  // Two "Close" buttons exist here: the footer button and the dialog's
+  // corner icon button (aria-label="Close") — the footer one renders first
+  // in DOM order (see DialogContent: children, then the optional X button).
+  await dialog.getByRole("button", { name: "Close" }).first().click();
 
   await page.goto("/publishing/audit-history");
   await expect(page.getByText("Demo data reset").first()).toBeVisible();
 });
 
-test("exporting a JSON content bundle triggers a download and logs the export", async ({ page }) => {
+test("exporting the default Published Content Bundle as JSON triggers a download and logs the export", async ({ page }) => {
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: /export content bundle/i }).click();
   const download = await downloadPromise;
 
-  expect(download.suggestedFilename()).toMatch(/^safespeak-content-bundle-.*\.json$/);
+  expect(download.suggestedFilename()).toMatch(/^safespeak-published-content-bundle-.*\.json$/);
   await expect(page.getByText("Bundle exported")).toBeVisible();
 });
 

@@ -13,6 +13,7 @@ import type { RightsContent } from "@/lib/models/rights-content";
 import type { SupportOrganisation } from "@/lib/models/support-organisation";
 import type { SupportProfessional } from "@/lib/models/support-professional";
 import type { TriageLabel } from "@/lib/models/triage-label";
+import { suggestMachineKeyFromName } from "@/lib/taxonomy/machine-key";
 
 /**
  * Bump this and add a new `.version(n).stores({...})` block (with an
@@ -20,7 +21,23 @@ import type { TriageLabel } from "@/lib/models/triage-label";
  * changes. Never edit an existing `.version()` block in place — see
  * README "Dexie schema" for the migration policy.
  */
-export const DB_SCHEMA_VERSION = 1;
+export const DB_SCHEMA_VERSION = 2;
+
+/**
+ * Shape of a `matchingRules` row as it could have been stored under schema
+ * version 1, before Phase 6 introduced `machineKey`/`enabled`/`topicKeys`/
+ * plural `incidentTypeIds`/etc. Only used by the version(2) `.upgrade()`
+ * below — never imported elsewhere.
+ */
+interface LegacyMatchingRuleRow {
+  id: string;
+  name: string;
+  incidentTypeId?: string;
+  active?: boolean;
+  required?: boolean;
+  machineKey?: string;
+  [key: string]: unknown;
+}
 
 export class AdminDatabase extends Dexie {
   documents!: EntityTable<DocumentRecord, "id">;
@@ -51,7 +68,7 @@ export class AdminDatabase extends Dexie {
       rightsContent: "id, status, jurisdiction, createdAt, updatedAt",
       supportOrganisations: "id, status, createdAt, updatedAt",
       supportProfessionals: "id, status, professionalType, verificationStatus, createdAt, updatedAt",
-      reportingDestinations: "id, status, jurisdiction, createdAt, updatedAt",
+      reportingDestinations: "id, status, createdAt, updatedAt",
       incidentTypes: "id, name, createdAt",
       triageLabels: "id, urgencyLevel, createdAt",
       resourceCategories: "id, parentCategoryId, createdAt",
@@ -60,6 +77,65 @@ export class AdminDatabase extends Dexie {
       appSettings: "id",
       contentBundleHistory: "id, generatedAt",
     });
+
+    // Phase 6: Matching Rules gained machineKey/enabled/topicKeys/plural
+    // incidentTypeIds and several new fields — see lib/models/matching-rule.ts.
+    // Only `matchingRules` changes here; every other store keeps its
+    // version(1) definition (Dexie merges unspecified stores forward).
+    this.version(2)
+      .stores({
+        matchingRules: "id, status, machineKey, createdAt, updatedAt",
+      })
+      .upgrade(async (tx) => {
+        const rows = (await tx.table("matchingRules").toArray()) as LegacyMatchingRuleRow[];
+        for (const row of rows) {
+          const machineKey =
+            typeof row.machineKey === "string" && row.machineKey.length > 0
+              ? row.machineKey
+              : suggestMachineKeyFromName(row.name || row.id) || `matching_rule_${row.id.replace(/[^a-z0-9]+/gi, "_").toLowerCase()}`;
+          const incidentTypeIds = Array.isArray(row.incidentTypeIds)
+            ? row.incidentTypeIds
+            : row.incidentTypeId
+              ? [row.incidentTypeId]
+              : [];
+
+          await tx.table("matchingRules").put({
+            id: row.id,
+            createdAt: row.createdAt,
+            updatedAt: row.updatedAt,
+            createdBy: row.createdBy,
+            updatedBy: row.updatedBy,
+            isDemo: row.isDemo,
+            status: row.status,
+            version: row.version,
+            name: row.name,
+            machineKey,
+            description: row.description,
+            priority: typeof row.priority === "number" ? row.priority : 0,
+            enabled: typeof row.enabled === "boolean" ? row.enabled : (row.active ?? true),
+            topicKeys: Array.isArray(row.topicKeys) ? row.topicKeys : [],
+            incidentTypeIds,
+            triageLabelIds: Array.isArray(row.triageLabelIds) ? row.triageLabelIds : [],
+            resourceCategoryIds: Array.isArray(row.resourceCategoryIds) ? row.resourceCategoryIds : [],
+            // v1 jurisdictions were untyped free strings (e.g. "Demo Jurisdiction");
+            // the new field is a typed AustralianJurisdiction enum with no safe
+            // mapping from the old free text, so it resets to the "no filter"
+            // wildcard rather than guessing — see matching-rule.ts's own doc comment.
+            jurisdictions: [],
+            urgencyLevels: Array.isArray(row.urgencyLevels) ? row.urgencyLevels : [],
+            supportNeeds: Array.isArray(row.supportNeeds) ? row.supportNeeds : [],
+            legislationIds: Array.isArray(row.legislationIds) ? row.legislationIds : [],
+            microcardIds: Array.isArray(row.microcardIds) ? row.microcardIds : [],
+            rightsContentIds: Array.isArray(row.rightsContentIds) ? row.rightsContentIds : [],
+            supportOrganisationIds: Array.isArray(row.supportOrganisationIds) ? row.supportOrganisationIds : [],
+            supportProfessionalIds: Array.isArray(row.supportProfessionalIds) ? row.supportProfessionalIds : [],
+            reportingDestinationIds: Array.isArray(row.reportingDestinationIds) ? row.reportingDestinationIds : [],
+            reviewDueDate: row.reviewDueDate,
+            internalNotes: row.internalNotes,
+            publishedDate: row.publishedDate,
+          });
+        }
+      });
   }
 }
 

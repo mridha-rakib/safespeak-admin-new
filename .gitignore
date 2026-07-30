@@ -7,9 +7,14 @@
 /coverage
 /test-results
 /playwright-report
+.e2e-run.lock
 
-# next.js
+# next.js — one directory per purpose (dev / production build+start / E2E
+# build+start) so they can never collide; see next.config.mjs + scripts/run-next.mjs.
 /.next/
+/.next-dev/
+/.next-build/
+/.next-e2e/
 /out/
 
 # production

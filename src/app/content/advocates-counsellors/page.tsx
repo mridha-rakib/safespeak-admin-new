@@ -1,75 +1,63 @@
 "use client";
 
-import { ModuleFoundationPage } from "@/components/layout/module-foundation-page";
-import { Card, CardContent } from "@/components/ui/card";
-import { ContentStatusBadge, VerificationBadge } from "@/components/ui/status-badge";
-import { Alert } from "@/components/ui/alert";
-import { deriveContactCapabilities } from "@/lib/contact-capabilities";
+import { IconPlus } from "@tabler/icons-react";
+import type { Route } from "next";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+
+import { buildProfessionalColumns } from "@/components/advocates-counsellors/columns";
+import { PageHeader } from "@/components/layout/page-header";
+import { TaxonomyFiltersPanel } from "@/components/taxonomy/taxonomy-filters-panel";
+import { useAdminRepository } from "@/components/providers/repository-provider";
+import { DataTable } from "@/components/table/data-table";
+import { buttonVariants } from "@/components/ui/button";
 import { useCrudList } from "@/hooks/use-crud-list";
-import { initialsForName } from "@/lib/models/support-professional";
+import { useTaxonomyDataBundle } from "@/hooks/use-taxonomy-data-bundle";
+import { applyTaxonomyListFilters, DEFAULT_TAXONOMY_LIST_FILTERS, type TaxonomyListFilters } from "@/lib/taxonomy/list-filters";
 
 export default function AdvocatesCounsellorsPage() {
+  const { repository } = useAdminRepository();
   const records = useCrudList((repo) => repo.supportProfessionals);
+  const organisationsList = useCrudList((repo) => repo.supportOrganisations);
+  const dataBundle = useTaxonomyDataBundle();
+  const [filters, setFilters] = useState<TaxonomyListFilters>(DEFAULT_TAXONOMY_LIST_FILTERS);
+
+  const filtered = useMemo(() => (records ? applyTaxonomyListFilters(records, filters) : records), [records, filters]);
+  const organisations = useMemo(() => organisationsList ?? [], [organisationsList]);
+  const eligibilityContext = useMemo(
+    () => (dataBundle ? { resourceCategories: dataBundle.resourceCategories, supportOrganisations: dataBundle.supportOrganisations } : undefined),
+    [dataBundle]
+  );
+
+  const columns = useMemo(
+    () => (repository ? buildProfessionalColumns(repository.supportProfessionals, organisations, eligibilityContext) : []),
+    [repository, organisations, eligibilityContext]
+  );
 
   return (
     <>
-      <ModuleFoundationPage
+      <PageHeader
         title="Advocates & Counsellors"
-        description="Individual support professionals. A profile may be published while its verification is still incomplete."
-        recordCount={records?.length}
-        fieldsPrepared={[
-          "fullName",
-          "professionalType",
-          "areasOfSupport",
-          "supportModes",
-          "verificationStatus",
-          "phone / email / bookingUrl / organisationWebsite",
-          "status",
-        ]}
+        description="Individual support professionals. A profile may be published while its verification is still incomplete — publication never implies verification."
+        actions={
+          <Link href={"/content/advocates-counsellors/new" as Route} className={buttonVariants()} prefetch={false}>
+            <IconPlus size={16} aria-hidden="true" />
+            Add Advocate or Counsellor
+          </Link>
+        }
       />
 
-      <Alert tone="warning" title="Publication does not imply verification">
-        A published profile can still be unverified. The badge below always states the verification
-        status in words — color is never the only signal.
-      </Alert>
+      <TaxonomyFiltersPanel filters={filters} onChange={setFilters} />
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        {records?.map((professional) => {
-          const capabilities = deriveContactCapabilities(professional);
-          return (
-            <Card key={professional.id}>
-              <CardContent className="flex items-start gap-3 p-4">
-                <span
-                  aria-hidden="true"
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary"
-                >
-                  {initialsForName(professional.fullName)}
-                </span>
-                <div className="min-w-0 flex-1 space-y-2">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-semibold text-foreground">{professional.fullName}</p>
-                    <ContentStatusBadge status={professional.status} />
-                  </div>
-                  <p className="text-xs capitalize text-muted-foreground">
-                    {professional.professionalType.replace(/_/g, " ")}
-                  </p>
-                  <VerificationBadge status={professional.verificationStatus} />
-                  <p className="text-xs text-muted-foreground">
-                    {[
-                      capabilities.canCall && "Phone",
-                      capabilities.canEmail && "Email",
-                      capabilities.canBook && "Booking link",
-                      capabilities.canVisitWebsite && "Website",
-                    ]
-                      .filter(Boolean)
-                      .join(" · ") || "No contact methods on file"}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      <DataTable
+        caption="Advocates & Counsellors"
+        columns={columns}
+        data={filtered}
+        searchPlaceholder="Search advocates & counsellors..."
+        emptyTitle={records && records.length > 0 ? "No profiles match the current filters" : "No advocates or counsellors yet"}
+        emptyDescription={records && records.length > 0 ? "Try clearing filters." : "Choose Add Advocate or Counsellor to create one."}
+        pageSizeStorageKey="safespeak-admin:advocates-counsellors:page-size"
+      />
     </>
   );
 }

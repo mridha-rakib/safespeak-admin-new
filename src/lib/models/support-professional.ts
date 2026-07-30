@@ -1,6 +1,9 @@
 import { z } from "zod";
 
+import { AUSTRALIAN_JURISDICTION_VALUES } from "@/lib/jurisdictions";
 import { baseRecordSchema } from "@/lib/models/base";
+import { VERIFICATION_STATUSES } from "@/lib/models/verification";
+import { emailFieldSchema, phoneFieldSchema, safeUrlFieldSchema } from "@/lib/support-directory/contact";
 
 export const PROFESSIONAL_TYPES = [
   "advocate",
@@ -15,13 +18,12 @@ export const PROFESSIONAL_TYPES = [
 export type ProfessionalType = (typeof PROFESSIONAL_TYPES)[number];
 
 /**
- * verified: confirmed by the local administrator.
- * not_verified: no confirmation has taken place — the default for new records.
- * pending_review: verification has been started but not concluded.
- * A profile never silently inherits "verified" from its organisation.
+ * Re-exported for existing call sites — the canonical definition (now
+ * shared with Support Organisations, and widened from 3 to 5 states) lives
+ * in lib/models/verification.ts. See README "Verification policy."
  */
-export const VERIFICATION_STATUSES = ["verified", "not_verified", "pending_review"] as const;
-export type VerificationStatus = (typeof VERIFICATION_STATUSES)[number];
+export { VERIFICATION_STATUSES };
+export type { VerificationStatus } from "@/lib/models/verification";
 
 export const SUPPORT_MODES = ["phone", "video", "in_person", "chat", "email"] as const;
 export type SupportMode = (typeof SUPPORT_MODES)[number];
@@ -45,23 +47,36 @@ export const supportProfessionalSchema = baseRecordSchema.extend({
   displayName: z.string().optional(),
   professionalType: z.enum(PROFESSIONAL_TYPES),
   profilePhoto: profilePhotoMetaSchema.optional(),
-  organisation: z.string().optional(),
+  /**
+   * A stable SupportOrganisation.id — never the organisation's name. This
+   * phase replaced the previous free-text `organisation` field (which
+   * stored a display string and could never support dependency tracking,
+   * dangling-reference detection, or "published organisations only" new
+   * selectors) with this typed reference; see README "Organisation ↔
+   * professional relationship."
+   */
+  organisationId: z.string().optional(),
   jobTitle: z.string().optional(),
   shortIntroduction: z.string().optional(),
   fullBiography: z.string().optional(),
 
   // Matching and expertise
   areasOfSupport: z.array(z.string()).default([]),
+  resourceCategoryIds: z.array(z.string()).default([]),
   incidentTypeIds: z.array(z.string()).default([]),
   triageLabelIds: z.array(z.string()).default([]),
   specialisations: z.array(z.string()).default([]),
   communitiesSupported: z.array(z.string()).default([]),
   ageGroupsSupported: z.array(z.string()).default([]),
-  jurisdictions: z.array(z.string()).default([]),
+  /** Typed Australian jurisdiction codes — upgraded this phase from free text, matching Support Organisations. */
+  jurisdictions: z.array(z.enum(AUSTRALIAN_JURISDICTION_VALUES)).default([]),
+  /** Serves the whole of Australia rather than (or in addition to) specific jurisdictions — see SupportOrganisation.australiaWide. */
+  australiaWide: z.boolean().default(false),
   serviceLocations: z.array(z.string()).default([]),
 
   // Availability and access
   supportModes: z.array(z.enum(SUPPORT_MODES)).default([]),
+  /** Administrator-maintained free text only — never a live/real-time signal. See README "Safety wording." */
   availability: z.string().optional(),
   timeZone: z.string().optional(),
   languages: z.array(z.string()).default(["en"]),
@@ -71,21 +86,28 @@ export const supportProfessionalSchema = baseRecordSchema.extend({
   acceptingNewReferrals: z.boolean().default(false),
 
   // Contact and booking
-  phone: z.string().optional(),
-  email: z.email().optional().or(z.literal("")),
-  bookingUrl: z.url().optional().or(z.literal("")),
-  organisationWebsite: z.url().optional().or(z.literal("")),
+  phone: phoneFieldSchema,
+  email: emailFieldSchema,
+  bookingUrl: safeUrlFieldSchema,
+  organisationWebsite: safeUrlFieldSchema,
   officeAddress: z.string().optional(),
   referralInstructions: z.string().optional(),
   contactNotes: z.string().optional(),
 
   // Governance
   verificationStatus: z.enum(VERIFICATION_STATUSES).default("not_verified"),
+  /** Admin-only — never shown in a public preview or the Published Content Bundle. Distinct from `internalReviewNotes` (general review notes). */
+  verificationNotes: z.string().optional(),
+  verifiedDate: z.string().optional(),
+  verificationExpiryDate: z.string().optional(),
   credentials: z.array(z.string()).default([]),
   registrationOrMembershipDetails: z.string().optional(),
   dataSource: z.string().optional(),
   lastReviewedDate: z.string().optional(),
+  /** Review Due Date — the pre-existing confirmed field name, reused as-is rather than adding a second `reviewDueDate` field. Required for Ready for review / Publish. */
   nextReviewDate: z.string().optional(),
+  /** Set automatically on first transition to "published" — never hand-edited. */
+  publishedDate: z.string().optional(),
   internalReviewNotes: z.string().optional(),
 });
 export type SupportProfessional = z.infer<typeof supportProfessionalSchema> & {

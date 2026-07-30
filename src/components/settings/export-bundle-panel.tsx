@@ -10,14 +10,20 @@ import { Button } from "@/components/ui/button";
 import { buildContentBundle, serializeBundleAsJson } from "@/lib/bundle/export-bundle";
 import { buildZipBundle } from "@/lib/bundle/export-bundle-zip";
 import { downloadBlob } from "@/lib/bundle/download-bundle";
-import { BUNDLE_SCHEMA_VERSION, contentBundleHistorySchema } from "@/lib/models/content-bundle";
 import { createAuditEvent } from "@/lib/models/audit-event";
 import { LOCAL_ADMIN_ACTOR, newId, nowIso } from "@/lib/models/base";
+import { BUNDLE_SCHEMA_VERSION, contentBundleHistorySchema, type BundlePurpose } from "@/lib/models/content-bundle";
 
 type ExportFormat = "json" | "zip";
 
+const PURPOSE_FILE_SLUG: Record<BundlePurpose, string> = {
+  published_content: "published-content-bundle",
+  admin_backup: "admin-backup-bundle",
+};
+
 export function ExportBundlePanel() {
   const { repository } = useAdminRepository();
+  const [purpose, setPurpose] = useState<BundlePurpose>("published_content");
   const [includeDemoData, setIncludeDemoData] = useState(true);
   const [format, setFormat] = useState<ExportFormat>("json");
   const [status, setStatus] = useState<"idle" | "working" | "done" | "error">("idle");
@@ -29,20 +35,22 @@ export function ExportBundlePanel() {
     setWarnings([]);
 
     try {
-      const bundle = await buildContentBundle(repository, { includeDemoData });
+      const bundle = await buildContentBundle(repository, { purpose, includeDemoData });
       const timestampSlug = nowIso().replace(/[:.]/g, "-");
+      const fileBase = `safespeak-${PURPOSE_FILE_SLUG[purpose]}-${timestampSlug}`;
 
       if (format === "zip") {
         const { blob, manifest } = await buildZipBundle(repository, bundle);
-        downloadBlob(blob, `safespeak-content-bundle-${timestampSlug}.zip`);
+        downloadBlob(blob, `${fileBase}.zip`);
         setWarnings(manifest.warnings);
         await repository.bundleHistory.append(
           contentBundleHistorySchema.parse({
             id: newId(),
             generatedAt: manifest.generatedAt,
             bundleVersion: manifest.bundleVersion,
+            purpose: manifest.purpose,
             format: "zip",
-            fileName: `safespeak-content-bundle-${timestampSlug}.zip`,
+            fileName: `${fileBase}.zip`,
             includesDemoData: manifest.includesDemoData,
             recordCounts: manifest.recordCounts,
             warningCount: manifest.warnings.length,
@@ -50,15 +58,16 @@ export function ExportBundlePanel() {
         );
       } else {
         const json = serializeBundleAsJson(bundle);
-        downloadBlob(new Blob([json], { type: "application/json" }), `safespeak-content-bundle-${timestampSlug}.json`);
+        downloadBlob(new Blob([json], { type: "application/json" }), `${fileBase}.json`);
         setWarnings(bundle.manifest.warnings);
         await repository.bundleHistory.append(
           contentBundleHistorySchema.parse({
             id: newId(),
             generatedAt: bundle.manifest.generatedAt,
             bundleVersion: bundle.manifest.bundleVersion,
+            purpose: bundle.manifest.purpose,
             format: "json",
-            fileName: `safespeak-content-bundle-${timestampSlug}.json`,
+            fileName: `${fileBase}.json`,
             includesDemoData: bundle.manifest.includesDemoData,
             recordCounts: bundle.manifest.recordCounts,
             warningCount: bundle.manifest.warnings.length,
@@ -72,7 +81,7 @@ export function ExportBundlePanel() {
           entityId: "content-bundle-export",
           action: "bundle_exported",
           actor: LOCAL_ADMIN_ACTOR,
-          summary: `Exported a ${format.toUpperCase()} content bundle (schema v${BUNDLE_SCHEMA_VERSION}).`,
+          summary: `Exported a ${format.toUpperCase()} ${purpose === "published_content" ? "Published Content Bundle" : "Admin Backup"} (schema v${BUNDLE_SCHEMA_VERSION}).`,
           isDemo: false,
         })
       );
@@ -89,6 +98,51 @@ export function ExportBundlePanel() {
         Exporting downloads a versioned bundle file to your computer. Importing it into the user-facing
         frontend is a separate step that will be implemented in a later phase.
       </Alert>
+
+      <fieldset className="flex flex-col gap-2">
+        <legend className="text-sm font-semibold text-foreground">What is this export for?</legend>
+        <label className="flex items-start gap-2 text-sm">
+          <input
+            type="radio"
+            name="bundle-purpose"
+            className="mt-0.5"
+            checked={purpose === "published_content"}
+            onChange={() => setPurpose("published_content")}
+          />
+          <span>
+            <span className="font-medium text-foreground">Published Content Bundle (default)</span>
+            <br />
+            <span className="text-xs text-muted-foreground">
+              Only published, non-archived content — this is what a future user frontend would consume.
+              Drafts, in-review items, internal notes, and archived records are never included.
+            </span>
+          </span>
+        </label>
+        <label className="flex items-start gap-2 text-sm">
+          <input
+            type="radio"
+            name="bundle-purpose"
+            className="mt-0.5"
+            checked={purpose === "admin_backup"}
+            onChange={() => setPurpose("admin_backup")}
+          />
+          <span>
+            <span className="font-medium text-foreground">Admin Backup</span>
+            <br />
+            <span className="text-xs text-muted-foreground">
+              Every local status, including drafts and archived records, for local restoration only. Not
+              for user-frontend consumption.
+            </span>
+          </span>
+        </label>
+      </fieldset>
+
+      {purpose === "admin_backup" ? (
+        <Alert tone="warning" title="Admin Backup — not for user-frontend consumption">
+          This export may include unpublished and archived records. It is clearly labelled as an admin
+          backup in its manifest so it is never mistaken for the Published Content Bundle.
+        </Alert>
+      ) : null}
 
       <fieldset className="flex flex-col gap-2">
         <legend className="text-sm font-semibold text-foreground">Format</legend>

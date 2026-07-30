@@ -32,7 +32,7 @@ test("the SafeSpeak logo renders in the sidebar", async ({ page }) => {
 
 test("sidebar groups render with their labelled sections", async ({ page }) => {
   await page.goto("/dashboard");
-  const nav = page.getByRole("navigation", { name: "Admin navigation" });
+  const nav = page.locator("aside").getByRole("navigation", { name: "Admin navigation" });
   await expect(nav.getByText("Content")).toBeVisible();
   await expect(nav.getByText("Taxonomy & Matching")).toBeVisible();
   await expect(nav.getByText("Publishing")).toBeVisible();
@@ -41,7 +41,18 @@ test("sidebar groups render with their labelled sections", async ({ page }) => {
 for (const route of NAV_ROUTES) {
   test(`navigating to "${route.label}" opens a valid page with the right heading`, async ({ page }) => {
     await page.goto("/dashboard");
-    await page.getByRole("navigation", { name: "Admin navigation" }).getByRole("link", { name: route.label }).click();
+    // Scoped to the desktop <aside> specifically: the mobile nav dialog
+    // renders the exact same SidebarNav component (same "Admin navigation"
+    // landmark) once opened, so an unscoped page-wide query would become
+    // ambiguous the moment both coexist. At default (desktop) viewport the
+    // mobile dialog is never mounted, but scoping here keeps this test
+    // correct regardless and matches the mobile test's own dialog scoping
+    // below.
+    await page
+      .locator("aside")
+      .getByRole("navigation", { name: "Admin navigation" })
+      .getByRole("link", { name: route.label })
+      .click();
     await expect(page).toHaveURL(new RegExp(`${route.href}$`));
     await expect(page.getByRole("heading", { level: 1, name: route.heading })).toBeVisible();
   });
@@ -49,9 +60,10 @@ for (const route of NAV_ROUTES) {
 
 test("the active route is exposed via aria-current for assistive tech", async ({ page }) => {
   await page.goto("/publishing/audit-history");
-  const activeLink = page.getByRole("navigation", { name: "Admin navigation" }).getByRole("link", {
-    name: "Audit History",
-  });
+  const activeLink = page
+    .locator("aside")
+    .getByRole("navigation", { name: "Admin navigation" })
+    .getByRole("link", { name: "Audit History" });
   await expect(activeLink).toHaveAttribute("aria-current", "page");
 });
 
