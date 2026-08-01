@@ -6,8 +6,6 @@ import { useMemo, useState } from "react";
 
 import { documentColumns } from "@/components/legislation/document-columns";
 import { DocumentFiltersPanel } from "@/components/legislation/document-filters-panel";
-import { LocalRetrievalTab } from "@/components/legislation/local-retrieval-tab";
-import { ProcessingIssuesTab } from "@/components/legislation/processing-issues-tab";
 import { RagReadinessTab } from "@/components/legislation/rag-readiness-tab";
 import { PageHeader } from "@/components/layout/page-header";
 import { DataTable } from "@/components/table/data-table";
@@ -42,8 +40,6 @@ export default function KnowledgeLegislationPage() {
         <TabsList>
           <TabsTrigger value="documents">Documents</TabsTrigger>
           <TabsTrigger value="rag-readiness">RAG readiness</TabsTrigger>
-          <TabsTrigger value="processing-issues">Processing issues</TabsTrigger>
-          <TabsTrigger value="test-retrieval">Test retrieval</TabsTrigger>
         </TabsList>
 
         <TabsContent value="documents">
@@ -72,14 +68,6 @@ export default function KnowledgeLegislationPage() {
 
         <TabsContent value="rag-readiness">
           <RagReadinessTab documents={documents} />
-        </TabsContent>
-
-        <TabsContent value="processing-issues">
-          <ProcessingIssuesTab documents={documents} />
-        </TabsContent>
-
-        <TabsContent value="test-retrieval">
-          <LocalRetrievalTab documents={documents} />
         </TabsContent>
       </Tabs>
     </>

@@ -1,5 +1,6 @@
 import Dexie, { type EntityTable } from "dexie";
 
+import type { AdminAccount } from "@/lib/models/admin-account";
 import type { AppSettings } from "@/lib/models/app-settings";
 import type { AuditEvent } from "@/lib/models/audit-event";
 import type { ContentBundleHistoryEntry } from "@/lib/models/content-bundle";
@@ -21,7 +22,7 @@ import { suggestMachineKeyFromName } from "@/lib/taxonomy/machine-key";
  * changes. Never edit an existing `.version()` block in place — see
  * README "Dexie schema" for the migration policy.
  */
-export const DB_SCHEMA_VERSION = 2;
+export const DB_SCHEMA_VERSION = 3;
 
 /**
  * Shape of a `matchingRules` row as it could have been stored under schema
@@ -54,6 +55,7 @@ export class AdminDatabase extends Dexie {
   auditEvents!: EntityTable<AuditEvent, "id">;
   appSettings!: EntityTable<AppSettings, "id">;
   contentBundleHistory!: EntityTable<ContentBundleHistoryEntry, "id">;
+  adminAccount!: EntityTable<AdminAccount, "id">;
 
   constructor(name = "safespeak-admin") {
     super(name);
@@ -136,6 +138,13 @@ export class AdminDatabase extends Dexie {
           });
         }
       });
+
+    // Phase 8.4: the logged-in Admin's own self-profile (display name only —
+    // see lib/models/admin-account.ts). A brand-new singleton store, so no
+    // .upgrade() is needed; every other store keeps its prior definition.
+    this.version(3).stores({
+      adminAccount: "id",
+    });
   }
 }
 

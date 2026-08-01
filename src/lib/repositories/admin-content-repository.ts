@@ -1,6 +1,7 @@
 import type { RagReadinessSummary } from "@/lib/legislation/readiness";
 import type { UsageSummary } from "@/lib/taxonomy/dependency-service";
 import type { TaxonomyEntity } from "@/lib/taxonomy/types";
+import type { AdminAccount } from "@/lib/models/admin-account";
 import type { AppSettings } from "@/lib/models/app-settings";
 import type { AuditAction, AuditEvent } from "@/lib/models/audit-event";
 import type { ContentStatus } from "@/lib/models/base";
@@ -218,6 +219,11 @@ export interface AdminContentRepository {
   settings: {
     get(): Promise<AppSettings>;
     update(patch: Partial<AppSettings>): Promise<AppSettings>;
+  };
+  /** The logged-in Admin's own self-profile — display name only. Not an Admin directory; there is exactly one row. */
+  adminAccount: {
+    get(): Promise<AdminAccount>;
+    update(patch: Partial<AdminAccount>): Promise<AdminAccount>;
   };
   bundleHistory: {
     list(): Promise<ContentBundleHistoryEntry[]>;

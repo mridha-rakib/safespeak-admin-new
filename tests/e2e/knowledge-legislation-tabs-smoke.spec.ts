@@ -6,14 +6,22 @@ import { expect, test } from "@playwright/test";
  * `.next` dev-build directory (production-hashed chunk filenames colliding
  * with a live dev server's dev-mode asset requests), not a source-code
  * infinite loop — see docs/ARCHITECTURE.md "Knowledge & Legislation tab
- * regression." This test exercises the golden path (all four tabs, repeated
- * transitions, styled shell, no page-level overflow) so a real regression in
- * this area fails a build-backed E2E run, not just a dev-server spot check.
+ * regression." This test exercises the golden path (both remaining tabs,
+ * repeated transitions, styled shell, no page-level overflow) so a real
+ * regression in this area fails a build-backed E2E run, not just a
+ * dev-server spot check.
+ *
+ * The "Processing issues" and "Test retrieval" tabs were removed from this
+ * page's UI; their dedicated coverage
+ * (knowledge-legislation-processing-issues.spec.ts,
+ * knowledge-legislation-retrieval.spec.ts) was removed alongside them. The
+ * underlying components still exist (`components/legislation/processing-
+ * issues-tab.tsx`, `local-retrieval-tab.tsx`) if this is ever re-surfaced.
  */
 
-const TABS = ["RAG readiness", "Processing issues", "Test retrieval", "Documents"] as const;
+const TABS = ["RAG readiness", "Documents"] as const;
 
-test("all four Knowledge & Legislation tabs switch repeatedly without freezing, erroring, or losing styling", async ({ page }) => {
+test("both Knowledge & Legislation tabs switch repeatedly without freezing, erroring, or losing styling", async ({ page }) => {
   const pageErrors: string[] = [];
   page.on("pageerror", (error) => pageErrors.push(String(error)));
 
@@ -47,13 +55,6 @@ test("all four Knowledge & Legislation tabs switch repeatedly without freezing, 
 
       if (tabName === "RAG readiness") {
         await expect(page.getByRole("table", { name: "Document readiness" })).toBeVisible();
-      } else if (tabName === "Processing issues") {
-        // Either the empty state or at least one issue entry — both are valid panel states, never a blank/frozen screen.
-        await expect(
-          page.getByText("No processing issues").or(page.locator('[class*="border-warning"]').first())
-        ).toBeVisible();
-      } else if (tabName === "Test retrieval") {
-        await expect(page.getByPlaceholder("Try: racial discrimination in the workplace")).toBeVisible();
       } else {
         await expect(table).toBeVisible();
       }
@@ -65,7 +66,7 @@ test("all four Knowledge & Legislation tabs switch repeatedly without freezing, 
     }
   }
 
-  // No uncaught page error across 20 tab switches.
+  // No uncaught page error across every tab switch.
   expect(pageErrors).toEqual([]);
 
   // Switching tabs is client-side state, never a full navigation.
@@ -76,7 +77,7 @@ test("all four Knowledge & Legislation tabs switch repeatedly without freezing, 
   expect(overflow).toBe(false);
 });
 
-test("no page-level horizontal overflow at a narrow mobile viewport, across all four tabs", async ({ page }) => {
+test("no page-level horizontal overflow at a narrow mobile viewport, across both tabs", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/content/knowledge-legislation");
   await expect(page.getByRole("heading", { level: 1, name: "Knowledge & Legislation" })).toBeVisible();

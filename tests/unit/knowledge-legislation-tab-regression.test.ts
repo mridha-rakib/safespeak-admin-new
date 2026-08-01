@@ -47,10 +47,10 @@ test("RagReadinessTab, ProcessingIssuesTab, and LocalRetrievalTab no longer call
   }
 });
 
-test("the page passes the same documents value to every tab (one shared read, not one per tab)", () => {
+test("the page passes the same documents value to the RAG readiness tab (one shared read)", () => {
   const pageSource = readFileSync(join(__dirname, "../../src/app/content/knowledge-legislation/page.tsx"), "utf8");
   const passedProps = [...pageSource.matchAll(/documents=\{documents\}/g)];
-  assert.equal(passedProps.length, 3, "expected all three heavier tabs (RAG readiness, Processing issues, Test retrieval) to receive the same `documents` reference");
+  assert.equal(passedProps.length, 1, "expected the RAG readiness tab to receive the shared `documents` reference");
 });
 
 test("summarizeReadiness is bounded and deterministic for an empty document list", () => {
