@@ -13,13 +13,21 @@
  * Falls back to the default `.next` only if a command is ever run outside
  * the wrapper scripts (e.g. a raw `npx next dev`) — same behaviour as
  * before this fix, never worse.
+ *
+ * On Vercel, `distDir` is always forced back to `.next` regardless of
+ * `NEXT_DIST_DIR`. Vercel's builder resolves `distDir` by evaluating this
+ * file itself (outside `scripts/run-next.mjs`), where `NEXT_DIST_DIR` is
+ * unset, so it always expects output in `.next` — while `pnpm run build`
+ * (via the wrapper) was actually writing to `.next-build`. That mismatch
+ * left Vercel unable to find the build output to deploy. `VERCEL=1` is set
+ * automatically in every Vercel build/deploy environment.
  */
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typedRoutes: true,
   reactStrictMode: true,
-  distDir: process.env.NEXT_DIST_DIR || ".next",
+  distDir: process.env.VERCEL ? ".next" : process.env.NEXT_DIST_DIR || ".next",
 };
 
 export default nextConfig;
