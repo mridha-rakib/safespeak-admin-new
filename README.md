@@ -56,7 +56,7 @@ safespeak-admin/
 ├── src/
 │   ├── app/
 │   │   ├── content/knowledge-legislation/
-│   │   │   ├── page.tsx                  # Documents | RAG readiness | Processing issues | Test retrieval
+│   │   │   ├── page.tsx                  # Documents | RAG readiness
 │   │   │   ├── new/page.tsx              # create wizard
 │   │   │   └── [documentId]/
 │   │   │       ├── page.tsx              # detail view
@@ -157,7 +157,7 @@ The only content module with a complete CRUD workflow in this phase. Routes:
 
 | Route | Purpose |
 | --- | --- |
-| `/content/knowledge-legislation` | Document list (search, filters, row actions) + RAG readiness / Processing issues / Test retrieval tabs |
+| `/content/knowledge-legislation` | Document list (search, filters, row actions) + RAG readiness tab |
 | `/content/knowledge-legislation/new` | Create wizard |
 | `/content/knowledge-legislation/[documentId]` | Detail view |
 | `/content/knowledge-legislation/[documentId]/edit` | Edit wizard (same component as create, pre-populated) |
@@ -206,7 +206,7 @@ Unchanged from Phase 1's foundation (`src/lib/pdf/`), now orchestrated by `src/l
 
 ### Local retrieval test — not production RAG
 
-`src/lib/legislation/retrieval.ts`, surfaced in the **Test retrieval** tab. This is a deterministic, browser-local **keyword-overlap** search over already-generated chunk previews:
+`src/lib/legislation/retrieval.ts` (implementation still present and unit-tested; the **Test retrieval** tab that surfaced it in the Knowledge & Legislation page has been removed from the UI — see `components/legislation/local-retrieval-tab.tsx` if it needs to be reattached). This is a deterministic, browser-local **keyword-overlap** search over already-generated chunk previews:
 
 1. Normalize and tokenize the query (lowercase, strip punctuation, drop a small stop-word list and single-character tokens).
 2. Score each chunk by counting token occurrences, plus a flat boost for an exact phrase match.
@@ -217,7 +217,7 @@ No embeddings are generated, no AI API is called, and no server or vector databa
 
 ### Processing issues and recovery
 
-The **Processing issues** tab lists every document with `processingStatus: "processing_issue"` (encrypted/corrupted/empty/no-extractable-text PDFs) with a plain-language reason, a **Retry extraction** action (reuses the stored blob, cannot run twice concurrently on the same document, clears the issue only on success, records success/failure either way), a **Replace PDF** action (opens the edit wizard's Step 1), and a **View** link.
+`components/legislation/processing-issues-tab.tsx` lists every document with `processingStatus: "processing_issue"` (encrypted/corrupted/empty/no-extractable-text PDFs) with a plain-language reason, a **Retry extraction** action (reuses the stored blob, cannot run twice concurrently on the same document, clears the issue only on success, records success/failure either way), a **Replace PDF** action (opens the edit wizard's Step 1), and a **View** link — **not currently surfaced**: the "Processing issues" tab that rendered it in the Knowledge & Legislation page has been removed from the UI. A `processing_issue` document can still be recovered via the **Replace file** link on its own detail page (opens the edit wizard), just not via the batch **Retry extraction** action or the plain-language issue list.
 
 ## Taxonomy: Incident Types, Triage Labels, Resource Categories
 
@@ -356,6 +356,7 @@ Never exported, in either purpose: Blob fields (`fileBlob`, profile photos — s
 - There is no login screen and no fake authentication of any kind. The app assumes a single local administrator, and audit metadata (`createdBy`/`updatedBy`/`actor`) is attributed to `LOCAL_ADMIN_ACTOR`.
 - No API route, remote database, or backend of any kind is created or simulated.
 - The `AdminContentRepository` interface exists specifically so this limitation is temporary by design, not baked into the UI layer.
+- **`/profile` (Phase 8.4) is not an account system.** It's a single, singleton, local-only record (`lib/models/admin-account.ts`, `ADMIN_ACCOUNT_ID`) holding a display name and an optional self-reference contact email — reached from the Header's account menu. There is still no Admin registration, no Admin directory, no other administrator accounts, and no sign-in/sign-out, because there is nothing to sign in or out of.
 
 ## Future migration path
 
