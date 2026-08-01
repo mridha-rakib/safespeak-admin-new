@@ -24,6 +24,7 @@ import { getProfessionalBlockers } from "@/lib/support-directory/professional-el
 import { getDestinationBlockers } from "@/lib/support-directory/destination-eligibility";
 import { isDuplicateDisplayName, isDuplicateMachineKey } from "@/lib/taxonomy/validation";
 import type { TaxonomyEntity } from "@/lib/taxonomy/types";
+import { ADMIN_ACCOUNT_ID, adminAccountSchema, type AdminAccount } from "@/lib/models/admin-account";
 import { APP_SETTINGS_ID, appSettingsSchema, type AppSettings } from "@/lib/models/app-settings";
 import { auditEventSchema, createAuditEvent, type AuditEntityType, type AuditEvent } from "@/lib/models/audit-event";
 import { LOCAL_ADMIN_ACTOR, nowIso, type ContentStatus } from "@/lib/models/base";
@@ -1082,6 +1083,28 @@ export function createIndexedDbAdminContentRepository(): AdminContentRepository 
     },
   };
 
+  const adminAccount = {
+    async get(): Promise<AdminAccount> {
+      const row = await db.adminAccount.get(ADMIN_ACCOUNT_ID);
+      if (row) {
+        const parsed = adminAccountSchema.safeParse(row);
+        if (parsed.success) return parsed.data;
+      }
+      const defaults = adminAccountSchema.parse({
+        id: ADMIN_ACCOUNT_ID,
+        updatedAt: nowIso(),
+      });
+      await db.adminAccount.put(defaults);
+      return defaults;
+    },
+    async update(patch: Partial<AdminAccount>): Promise<AdminAccount> {
+      const current = await adminAccount.get();
+      const merged = adminAccountSchema.parse({ ...current, ...patch, updatedAt: nowIso() });
+      await db.adminAccount.put(merged);
+      return merged;
+    },
+  };
+
   const bundleHistory = {
     async list(): Promise<ContentBundleHistoryEntry[]> {
       const rows = await db.contentBundleHistory.orderBy("generatedAt").reverse().toArray();
@@ -1231,10 +1254,18 @@ export function createIndexedDbAdminContentRepository(): AdminContentRepository 
     matchingRules,
     auditEvents,
     settings,
+    adminAccount,
     bundleHistory,
     getDashboardSummary,
 
     async ensureSeeded(): Promise<void> {
+      // Creates the singleton row (via its own get()'s put-if-missing) here,
+      // in a plain transaction, before any component's useLiveQuery(() =>
+      // adminAccount.get()) can run — a write performed *inside* a
+      // dexie-react-hooks live query throws Dexie's ReadOnlyError, since the
+      // read-side observer transaction is read-only.
+      await adminAccount.get();
+
       const current = await settings.get();
       if (current.demoDataSeededAt) return;
 

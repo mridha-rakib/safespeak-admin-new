@@ -4,9 +4,9 @@
   "private": true,
   "description": "Standalone local-first admin dashboard for managing SafeSpeak content, taxonomy, and publishing.",
   "scripts": {
-    "dev": "node scripts/run-next.mjs dev dev --port 3100",
-    "build": "node scripts/run-next.mjs build build",
-    "start": "node scripts/run-next.mjs build start --port 3100",
+    "dev": "node api.js && node scripts/run-next.mjs dev dev --port 3100",
+    "build": "node api.js && node scripts/run-next.mjs build build",
+    "start": "node api.js && node scripts/run-next.mjs build start --port 3100",
     "start:e2e": "node scripts/run-next.mjs e2e start --port 3199",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
@@ -66,6 +66,10 @@
   },
   "license": "MIT",
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "sharp", "unrs-resolver"]
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }
